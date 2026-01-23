@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react'
+import type { FC, PropsWithChildren, ReactNode } from 'react'
 import React from 'react'
 import type { IntersectionOptions } from 'react-intersection-observer'
 import { useInView } from 'react-intersection-observer'
@@ -8,7 +8,7 @@ export type LazyLoadProps = {
   placeholder?: React.ReactNode
 } & IntersectionOptions
 export const LazyLoad: FC<
-  { children: React.ReactChildren | ReactNode } & LazyLoadProps
+  PropsWithChildren<LazyLoadProps>
 > = (props) => {
   const { placeholder = null, offset = 0, ...rest } = props
   const { ref, inView } = useInView({

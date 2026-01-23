@@ -10,6 +10,7 @@ import React, {
   useState,
 } from 'react'
 import { Modifier, ShortcutContext } from 'react-shortcut-guide'
+import type { ShortcutContextValue } from 'react-shortcut-guide'
 
 import { FloatPopover } from '~/components/ui/FloatPopover'
 import { FontIcon } from '~/components/ui/FontIcon'
@@ -32,7 +33,8 @@ const MenuLink: FC<{ menu: Menu; isPublicUrl: boolean; index: number }> = (
       label: message,
     })
   }, [])
-  const { registerShortcut } = useContext(ShortcutContext)
+  const { registerShortcut } =
+    useContext<ShortcutContextValue>(ShortcutContext as any)
   const id = `header-menu-${index}`
   useEffect(() => {
     if (index + 1 >= 10) {

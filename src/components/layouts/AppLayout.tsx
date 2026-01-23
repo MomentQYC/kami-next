@@ -1,5 +1,6 @@
-import { NextSeo } from 'next-seo'
-import type { FC } from 'react'
+import Head from 'next/head'
+import { generateNextSeo } from 'next-seo/pages'
+import type { FC, PropsWithChildren } from 'react'
 import { useInsertionEffect } from 'react'
 
 import type { AggregateRoot } from '@mx-space/api-client'
@@ -14,7 +15,7 @@ import { useRouterEvent } from '~/hooks/app/use-router-event'
 import { useScreenMedia } from '~/hooks/ui/use-screen-media'
 import { loadStyleSheet } from '~/utils/load-script'
 
-export const AppLayout: FC = (props) => {
+export const AppLayout: FC<PropsWithChildren> = (props) => {
   useScreenMedia()
 
   useRouterEvent()
@@ -31,10 +32,12 @@ export const AppLayout: FC = (props) => {
   return (
     <>
       <DynamicHeadMeta />
-      <NextSeo
-        title={`${initialData.seo.title} · ${initialData.seo.description}`}
-        description={initialData.seo.description}
-      />
+      <Head>
+        {generateNextSeo({
+          title: `${initialData.seo.title} · ${initialData.seo.description}`,
+          description: initialData.seo.description,
+        })}
+      </Head>
 
       <div id="next">{props.children}</div>
       <Loader />

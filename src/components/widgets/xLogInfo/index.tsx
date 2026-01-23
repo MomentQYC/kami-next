@@ -38,7 +38,7 @@ export const XLogInfoBase: FC<{
 
   const { metadata, pageId, cid, ipfs } = meta as XLogMeta
 
-  const sections = [] as JSX.Element[]
+  const sections = [] as React.JSX.Element[]
 
   if (pageId) {
     sections.push(

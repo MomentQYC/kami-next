@@ -38,3 +38,9 @@ packages/kami-design/components/**/*.temp.tsx
 
 # Sentry Auth Token
 .sentryclirc
+
+# If using Claude
+CLAUDE.local.md
+
+# If using Codex
+AGENTS.md

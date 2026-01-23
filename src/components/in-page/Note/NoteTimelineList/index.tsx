@@ -5,7 +5,7 @@ import { clsx } from 'clsx'
 import Link from 'next/link'
 import type { FC } from 'react'
 import { memo, useEffect, useMemo, useState } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import type { NoteModel } from '@mx-space/api-client'
@@ -52,11 +52,11 @@ const TopicComp: FC<{
 }
 
 const ObserveredNoteTimelineList: FC<
-  NoteTimelineListProps & JSX.IntrinsicElements['div']
+  NoteTimelineListProps & React.JSX.IntrinsicElements['div']
 > = (props) => {
   const { className, noteId } = props
 
-  const note = useNoteCollection((state) => state.get(noteId), shallow)
+  const note = useNoteCollection(useShallow((state) => state.get(noteId)))
 
   const [list, setList] = useState(() => {
     if (!note) return []
@@ -172,7 +172,7 @@ export const MemoedItem = memo<{
 })
 
 export const NoteTimelineList: FC<
-  NoteTimelineListProps & JSX.IntrinsicElements['div']
+  NoteTimelineListProps & React.JSX.IntrinsicElements['div']
 > = memo((props) => {
   const isWiderThanLaptop = useDetectIsNarrowThanLaptop()
   if (isWiderThanLaptop) {

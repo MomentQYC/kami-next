@@ -316,8 +316,7 @@ export const _MusicMiniPlayerStoreControlled = memo(() => {
       isPlay: state.isPlay,
       isHide: state.isHide,
       playlist: state.list,
-    }),
-    shallow,
+    })
   )
   const { event } = useAnalyze()
   useEffect(() => {

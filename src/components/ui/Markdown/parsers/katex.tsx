@@ -24,7 +24,7 @@ export const KateXRule: MarkdownToJSX.Rule = {
 
       return <LateX key={state?.key}>{str}</LateX>
     } catch {
-      return null as any
+      return null
     }
   },
 }

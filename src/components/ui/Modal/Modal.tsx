@@ -1,7 +1,8 @@
 import { clsx } from 'clsx'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import React, {
   forwardRef,
+  memo,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -34,11 +35,10 @@ export type ModalRefObject = {
   forceUpdate: () => void
 }
 
-const ModalContent: FC<{
+const ModalContent: FC<PropsWithChildren<{
   title?: string
   contentClassName?: string
-  children: React.ReactNode
-}> = (props) => {
+}>> = (props) => {
   const { children, contentClassName, title } = props
   return (
     <div
@@ -53,105 +53,111 @@ const ModalContent: FC<{
   )
 }
 
-export const Modal = forwardRef<
-  ModalRefObject,
-  ModalProps & {
-    modalId: string
-    useBottomDrawerInMobile: boolean
-    disposer: () => void
-    getIsMobileViewport: () => boolean
-  }
->((props, ref) => {
-  const [modalIn, setIn] = useState(true)
-  const dismiss = useCallback(() => {
-    return new Promise<void>((resolve) => {
-      setIn(false)
-      setTimeout(() => {
-        resolve(null as any)
-        props.disposer()
-      }, 300)
-      props.onClose && props.onClose()
-    })
-  }, [props.disposer])
-
-  const $wrapper = useRef<HTMLDivElement>(null)
-  const forceUpdate = useState({})[1]
-
-  useImperativeHandle(ref, () => ({
-    dismiss,
-    getElement: () => {
-      return $wrapper.current as HTMLElement
-    },
-    forceUpdate() {
-      forceUpdate({})
-    },
-  }))
-
-  const {
-    title,
-    closeable,
-    modalId,
-    useRootPortal,
-    getIsMobileViewport,
-    blur = true,
-  } = props
-  const useDrawerStyle = getIsMobileViewport() && props.useBottomDrawerInMobile
-
-  const isMounted = useIsMountedState()
-
-  const portalProviderValue = useRef({ to: $wrapper.current as HTMLElement })
-
-  const Children = (
-    <div
-      id={modalId}
-      ref={$wrapper}
-      className={clsx(
-        styles['modal'],
-        props.fixedWidth && styles['fixed-width'],
-        useDrawerStyle && styles['drawer'],
-        !blur && styles['no-blur'],
-        props.modalClassName,
-      )}
+export const Modal = memo(
+  forwardRef<
+    ModalRefObject,
+    PropsWithChildren<
+      ModalProps & {
+        modalId: string
+        useBottomDrawerInMobile: boolean
+        disposer: () => void
+        getIsMobileViewport: () => boolean
+      }
     >
-      {title && (
-        <div className={styles['title-wrapper']}>
-          <h4>{title}</h4>
-        </div>
-      )}
-      {closeable && (
-        <div className={styles['close-btn']} onClick={dismiss} role="button">
-          <CloseIcon />
-        </div>
-      )}
-      {useRootPortal ? (
-        isMounted ? (
-          <RootPortalProvider value={portalProviderValue.current}>
-            <ModalContent {...props}>{props.children}</ModalContent>
-          </RootPortalProvider>
-        ) : null
-      ) : (
-        <ModalContent {...props}>{props.children}</ModalContent>
-      )}
-    </div>
-  )
+  >((props, ref) => {
+    const [modalIn, setIn] = useState(true)
+    const dismiss = useCallback(() => {
+      return new Promise<void>((resolve) => {
+        setIn(false)
+        setTimeout(() => {
+          resolve()
+          props.disposer()
+        }, 300)
+        props.onClose && props.onClose()
+      })
+    }, [props.disposer])
 
-  const timeout = useRef({ exit: 200 }).current
-  return useDrawerStyle ? (
-    <BottomToUpTransitionView in={modalIn} timeout={timeout}>
-      {Children}
-    </BottomToUpTransitionView>
-  ) : (
-    <ScaleModalTransition
-      useAnimatePresence
-      animation={{
-        enter: {
-          ...microReboundPreset,
-        },
-      }}
-      in={modalIn}
-      timeout={timeout}
-    >
-      {Children}
-    </ScaleModalTransition>
-  )
-})
+    const $wrapper = useRef<HTMLDivElement>(null)
+    const forceUpdate = useState({})[1]
+
+    useImperativeHandle(ref, () => ({
+      dismiss,
+      getElement: () => {
+        return $wrapper.current as HTMLElement
+      },
+      forceUpdate() {
+        forceUpdate({})
+      },
+    }))
+
+    const {
+      title,
+      closeable,
+      modalId,
+      useRootPortal,
+      getIsMobileViewport,
+      blur = true,
+    } = props
+    const useDrawerStyle = getIsMobileViewport() && props.useBottomDrawerInMobile
+
+    const isMounted = useIsMountedState()
+
+    const portalProviderValue = useRef({ to: $wrapper.current as HTMLElement })
+
+    const Children = (
+      <div
+        id={modalId}
+        ref={$wrapper}
+        className={clsx(
+          styles['modal'],
+          props.fixedWidth && styles['fixed-width'],
+          useDrawerStyle && styles['drawer'],
+          !blur && styles['no-blur'],
+          props.modalClassName,
+        )}
+      >
+        {title && (
+          <div className={styles['title-wrapper']}>
+            <h4>{title}</h4>
+          </div>
+        )}
+        {closeable && (
+          <div className={styles['close-btn']} onClick={dismiss} role="button">
+            <CloseIcon />
+          </div>
+        )}
+        {useRootPortal ? (
+          isMounted ? (
+            <RootPortalProvider value={portalProviderValue.current}>
+              <ModalContent {...props}>{props.children}</ModalContent>
+            </RootPortalProvider>
+          ) : null
+        ) : (
+          <ModalContent {...props}>{props.children}</ModalContent>
+        )}
+      </div>
+    )
+
+    const timeout = useRef({ exit: 200 }).current
+    return useDrawerStyle ? (
+      <BottomToUpTransitionView in={modalIn} timeout={timeout}>
+        {Children}
+      </BottomToUpTransitionView>
+    ) : (
+      <ScaleModalTransition
+        useAnimatePresence
+        animation={{
+          enter: {
+            ...microReboundPreset,
+          },
+        }}
+        in={modalIn}
+        timeout={timeout}
+      >
+        {Children}
+      </ScaleModalTransition>
+    )
+  }),
+)
+
+Modal.displayName = 'Modal'

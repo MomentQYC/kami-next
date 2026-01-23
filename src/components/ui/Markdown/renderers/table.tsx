@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import type { FC } from 'react'
 import React from 'react'
 
-export const MTableHead: FC<JSX.IntrinsicElements['thead']> = (props) => {
+export const MTableHead: FC<React.JSX.IntrinsicElements['thead']> = (props) => {
   const { children, className, ...rest } = props
   return (
     <thead
@@ -17,12 +17,12 @@ export const MTableHead: FC<JSX.IntrinsicElements['thead']> = (props) => {
   )
 }
 
-export const MTableRow: FC<JSX.IntrinsicElements['tr']> = (props) => {
+export const MTableRow: FC<React.JSX.IntrinsicElements['tr']> = (props) => {
   const { children, ...rest } = props
   return <tr {...rest}>{children}</tr>
 }
 
-export const MTableBody: FC<JSX.IntrinsicElements['tbody']> = (props) => {
+export const MTableBody: FC<React.JSX.IntrinsicElements['tbody']> = (props) => {
   const { children, ...rest } = props
   return <tbody {...rest}>{children}</tbody>
 }

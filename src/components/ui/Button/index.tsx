@@ -1,11 +1,13 @@
 import clsx from 'clsx'
 import type { HTMLMotionProps } from 'framer-motion'
 import { motion } from 'framer-motion'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 
 import { microReboundPreset } from '~/constants/spring'
 
-export const Button: FC<HTMLMotionProps<'button'>> = (props) => {
+export const Button: FC<PropsWithChildren<HTMLMotionProps<'button'>>> = (
+  props,
+) => {
   const { className, ...rest } = props
   return (
     <motion.button
@@ -15,7 +17,7 @@ export const Button: FC<HTMLMotionProps<'button'>> = (props) => {
         scale: 0.9,
       }}
       whileHover={{
-        shadow:
+        boxShadow:
           '0 0 10px rgb(120 120 120 / 10%), 0 5px 20px rgb(120 120 120 / 20%)',
       }}
       {...rest}

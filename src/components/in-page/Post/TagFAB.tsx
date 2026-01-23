@@ -18,7 +18,7 @@ import { TrackerAction } from '~/constants/tracker'
 import { useAnalyze } from '~/hooks/app/use-analyze'
 import { apiClient } from '~/utils/client'
 
-const TagsContainer: FC<{ children?: JSX.Element[]; onClick: () => any }> = ({
+const TagsContainer: FC<{ children?: React.JSX.Element[]; onClick: () => any }> = ({
   onClick,
   children,
 }) => {

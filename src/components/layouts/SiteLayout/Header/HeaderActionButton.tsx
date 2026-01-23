@@ -1,5 +1,5 @@
 import { clsx } from 'clsx'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { memo, useCallback, useRef } from 'react'
 
 import { useNoteCollection } from '~/atoms/collections/note'
@@ -9,7 +9,7 @@ import { useAnalyze } from '~/hooks/app/use-analyze'
 
 import styles from './index.module.css'
 
-export const HeaderActionButton: FC<JSX.IntrinsicElements['button']> = (
+export const HeaderActionButton: FC<React.JSX.IntrinsicElements['button']> = (
   props,
 ) => {
   const { className, ...rest } = props
@@ -23,7 +23,7 @@ export const HeaderActionButton: FC<JSX.IntrinsicElements['button']> = (
     />
   )
 }
-export const HeaderActionButtonsContainer = memo((props) => {
+export const HeaderActionButtonsContainer = memo<PropsWithChildren>((props) => {
   return <div className="mr-3 flex items-center">{props.children}</div>
 })
 

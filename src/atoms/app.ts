@@ -48,7 +48,15 @@ const appDefault: AppState = {
   mediaType: 'screen',
   position: 0,
   scrollDirection: null,
-  viewport: {} as any,
+  viewport: {
+    w: 0,
+    h: 0,
+    mobile: false,
+    pad: false,
+    hpad: false,
+    wider: false,
+    widest: false,
+  },
 
   gatewayOnline: 0,
 

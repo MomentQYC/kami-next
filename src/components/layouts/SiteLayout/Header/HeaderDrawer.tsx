@@ -1,6 +1,6 @@
 import classNames from 'clsx'
 import { useRouter } from 'next/router'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { Fragment, memo, useEffect } from 'react'
 
 import { withNoSSR } from '~/components/app/HoC/no-ssr'
@@ -14,7 +14,7 @@ import { useDetectPadOrMobile } from '~/hooks/ui/use-viewport'
 
 import styles from './index.module.css'
 
-const _HeaderDrawer: FC<{ show: boolean; onExit: () => void }> = memo(
+const _HeaderDrawer: FC<PropsWithChildren<{ show: boolean; onExit: () => void }>> = memo(
   ({ children, onExit, show }) => {
     const router = useRouter()
     const { event } = useAnalyze()

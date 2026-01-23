@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
-import { NextSeo } from 'next-seo'
+import Head from 'next/head'
+import { generateNextSeo } from 'next-seo/pages'
 import { useEffect, useMemo } from 'react'
 
 import type { AggregateTop } from '@mx-space/api-client'
@@ -52,10 +53,12 @@ const IndexView: NextPage<AggregateTop> = (props) => {
 
   return (
     <main>
-      <NextSeo
-        title={`${initData.seo.title} · ${initData.seo.description}`}
-        description={initData.seo.description}
-      />
+      <Head>
+        {generateNextSeo({
+          title: `${initData.seo.title} · ${initData.seo.description}`,
+          description: initData.seo.description,
+        })}
+      </Head>
       <HomePageViewProvider
         value={useMemo(() => ({ doAnimation }), [doAnimation])}
       >
@@ -71,7 +74,7 @@ const IndexView: NextPage<AggregateTop> = (props) => {
 IndexView.getInitialProps = async () => {
   const aggregateData = await apiClient.aggregate.getTop()
 
-  return omit({ ...aggregateData }, ['says']) as any
+  return omit({ ...aggregateData }, ['says']) as unknown as AggregateTop
 }
 
 export default IndexView

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { MarkdownToJSX } from 'markdown-to-jsx'
 import { sanitizeUrl } from 'markdown-to-jsx'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import React, { Fragment, memo, useMemo } from 'react'
 
 import { ErrorBoundary } from '~/components/app/ErrorBoundary'
@@ -21,7 +21,7 @@ const Noop = () => null
 export interface KamiMarkdownProps extends MdProps {
   toc?: boolean
 }
-export const KamiMarkdown: FC<KamiMarkdownProps & MarkdownToJSX.Options> = memo(
+export const KamiMarkdown: FC<PropsWithChildren<KamiMarkdownProps & MarkdownToJSX.Options>> = memo(
   (props) => {
     const {
       value,

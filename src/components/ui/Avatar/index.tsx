@@ -1,6 +1,6 @@
 import { clsx } from 'clsx'
 import rc from 'randomcolor'
-import type { DetailedHTMLProps, FC, ImgHTMLAttributes } from 'react'
+import type { DetailedHTMLProps, FC, ImgHTMLAttributes, ReactNode } from 'react'
 import React, { createElement, memo, useMemo, useRef, useState } from 'react'
 
 import { FlexText } from '../FlexText'
@@ -11,25 +11,27 @@ interface AvatarProps {
   imageUrl?: string
   size?: number
 
-  wrapperProps?: JSX.IntrinsicElements['div']
+  wrapperProps?: React.JSX.IntrinsicElements['div']
 
   useRandomColor?: boolean
   shadow?: boolean
   text?: string
 
   lazy?: boolean
+
+  children?: ReactNode
 }
 
 export const Avatar: FC<
   AvatarProps &
-    DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+  DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
 > = memo((props) => {
   const { useRandomColor = true, shadow = true, lazy = true } = props
   const avatarRef = useRef<HTMLDivElement>(null)
   const randomColor = useMemo(
     () =>
       useRandomColor
-        ? rc({ luminosity: 'light', seed: props.src })
+        ? rc({ luminosity: 'light', seed: props.src as string })
         : 'var(--gray)',
     [props.src, useRandomColor],
   )
@@ -61,10 +63,10 @@ export const Avatar: FC<
 
           ...(props.url
             ? {
-                href: props.url,
-                target: '_blank',
-                rel: 'noreferrer',
-              }
+              href: props.url,
+              target: '_blank',
+              rel: 'noreferrer',
+            }
             : {}),
         },
         props.imageUrl ? (

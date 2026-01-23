@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { motion, useAnimationControls } from 'framer-motion'
 import type { ReactNode } from 'react'
 import { forwardRef, lazy, useCallback, useEffect } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useAppStore } from '~/atoms/app'
 import { useNoteCollection } from '~/atoms/collections/note'
@@ -37,11 +37,11 @@ const bannerClassNames = {
   secondary: `bg-sky-100 dark:bg-sky-800 dark:text-white`,
 }
 const useNoteMetaBanner = (id: string) => {
-  const note = useNoteCollection((state) => {
+  const note = useNoteCollection(useShallow((state) => {
     const note = state.get(id)
     if (!note) return null
     return { meta: note.meta }
-  }, shallow)
+  }))
   const meta = note?.meta
   let banner = meta?.banner as {
     type: string
@@ -89,7 +89,9 @@ export const NoteLayout = forwardRef<HTMLElement, NoteLayoutProps>(
     const url = useAppStore((state) => state.appUrl)
 
     const bookmark = useNoteCollection((state) => state.get(id)?.bookmark)
-    const isHide = useNoteCollection((state) => state.get(id)?.hide)
+    const isHide = useNoteCollection(
+      (state) => (state.get(id) as unknown as { hide: boolean })?.hide,
+    )
     const banner = useNoteMetaBanner(id)
     const onMarkToggle = useCallback(async () => {
       await useNoteCollection.getState().bookmark(id)

@@ -8,6 +8,7 @@ import { usePageCollection } from '~/atoms/collections/page'
 import { usePostCollection } from '~/atoms/collections/post'
 import { useSayCollection } from '~/atoms/collections/say'
 import { useUserStore } from '~/atoms/user'
+import type { NoteModel, PostModel } from '@mx-space/api-client'
 import { EventTypes } from '~/types/events'
 import { createDangmaku } from '~/utils/danmaku'
 import { isDev } from '~/utils/env'
@@ -62,9 +63,9 @@ export const eventHandler = (type: EventTypes, data: any) => {
         onclick: () => {
           window.open(
             webUrl +
-              (_type[type] === 'post'
-                ? `/posts/${data.category.slug}/${data.slug}`
-                : `/notes/${data.nid}`),
+            (_type[type] === 'post'
+              ? `/posts/${data.category.slug}/${data.slug}`
+              : `/notes/${data.nid}`),
           )
         },
       })
@@ -110,7 +111,7 @@ export const eventHandler = (type: EventTypes, data: any) => {
         notice.notice({
           title: `${userStore.master?.name} 敲了你一下`,
           text: data.text,
-          options: { image: userStore.master?.avatar },
+          options: { icon: userStore.master?.avatar },
         })
       }
 
@@ -131,7 +132,7 @@ export const eventHandler = (type: EventTypes, data: any) => {
       noteCollection.addOrPatch(data)
       useNoteCollection.setState(
         produce((state: ReturnType<typeof useNoteCollection.getState>) => {
-          const note = state.get(data.id)
+          const note = state.get(data.id) as NoteModel & { hide?: boolean }
           if (note) {
             if (note.hide && !useUserStore.getState().isLogged) {
               note.title = '已隐藏'
@@ -175,9 +176,8 @@ export const eventHandler = (type: EventTypes, data: any) => {
   }
 }
 function noticeHead(type: string, title?: string) {
-  return `${useUserStore.getState().master?.name}发布了新的${type}${
-    title ? `: ${title}` : ''
-  }`
+  return `${useUserStore.getState().master?.name}发布了新的${type}${title ? `: ${title}` : ''
+    }`
 }
 function getDescription(text: string) {
   return text.length > 20 ? `${text.slice(0, 20)}...` : text

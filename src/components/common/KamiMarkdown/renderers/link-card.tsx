@@ -25,7 +25,7 @@ export const LinkCard: FC<LinkCardProps> = (props) => {
 
   const [loading, setLoading] = useState(true)
   const [isError, setIsError] = useState(false)
-  const fetchFnRef = useRef<() => Promise<any>>()
+  const fetchFnRef = useRef<() => Promise<any>>(null)
 
   const [fullUrl, _setFullUrl] = useState('about:blank')
   const [cardInfo, _setCardInfo] = useState<{

@@ -9,7 +9,7 @@ import React, {
   useRef,
 } from 'react'
 import RemoveMarkdown from 'remove-markdown'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import type { PageModel } from '@mx-space/api-client'
 
@@ -39,7 +39,7 @@ const CommentLazy = lazy(() =>
 )
 
 const PageView: PageOnlyProps = (props) => {
-  const page = usePageCollection((state) => state.data.get(props.id), shallow)!
+  const page = usePageCollection(useShallow((state) => state.data.get(props.id)))!
   const { title, subtitle, text } = page
 
   useEffect(() => {
@@ -128,7 +128,7 @@ const PageView: PageOnlyProps = (props) => {
 }
 
 const NextPageView: NextPage<PageModel> = (props) => {
-  const { id } = props as any
+  const { id } = props
   const pageId = usePageCollection((state) => state.data.get(id)?.id)
 
   if (!pageId) {

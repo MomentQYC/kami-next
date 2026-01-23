@@ -6,9 +6,9 @@
     "strict": true,
     "target": "esnext",
     "module": "esnext",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "allowJs": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "removeComments": false,
     "preserveConstEnums": true,
@@ -35,17 +35,18 @@
       ],
       "~": [
         "."
-      ],
+      ]
     }
   },
   "exclude": [
     ".next",
     "server/**/*.*",
+    "node_modules/.pnpm/@mx-space+api-client@*/node_modules/@mx-space/api-client/**/*.ts"
   ],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "./package.json",
+    "./package.json"
   ]
 }

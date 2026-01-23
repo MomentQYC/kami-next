@@ -18,7 +18,7 @@ import React, {
 import styles from './index.module.css'
 
 interface InputProps {
-  prefix?: JSX.Element
+  prefix?: React.JSX.Element
   multi?: boolean
   wrapperProps?: DetailedHTMLProps<
     HTMLAttributes<HTMLSpanElement>,

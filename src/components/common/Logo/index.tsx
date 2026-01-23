@@ -3,7 +3,7 @@ import { memo } from 'react'
 
 import { useKamiConfig } from '~/hooks/app/use-initial-data'
 
-export const DefaultLogo: FC<JSX.IntrinsicElements['svg']> = memo((props) => {
+export const DefaultLogo: FC<React.JSX.IntrinsicElements['svg']> = memo((props) => {
   return (
     <svg viewBox="0 0 200 200" version="1.1" {...props}>
       <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
@@ -31,7 +31,7 @@ export const DefaultLogo: FC<JSX.IntrinsicElements['svg']> = memo((props) => {
   )
 })
 
-export const CustomLogo: FC<JSX.IntrinsicElements['svg']> = memo((props) => {
+export const CustomLogo: FC<React.JSX.IntrinsicElements['svg']> = memo((props) => {
   const {
     site: { logoSvg },
   } = useKamiConfig()

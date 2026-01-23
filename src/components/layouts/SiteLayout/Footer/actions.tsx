@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import type { FC, PropsWithChildren } from 'react'
 import React, { useCallback, useDeferredValue, useMemo } from 'react'
 import { Modifier, useShortcut } from 'react-shortcut-guide'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useActionStore } from '~/atoms/action'
 import { useAppStore } from '~/atoms/app'
@@ -31,10 +31,9 @@ const FooterActionsBase: FC<{
 
   const isPadOrMobile = useDetectPadOrMobile()
   const { scrollDirection } = useAppStore(
-    (state) => ({
+    useShallow((state) => ({
       scrollDirection: state.scrollDirection,
-    }),
-    shallow,
+    })),
   )
 
   const shouldHideActionButtons = useMemo(() => {

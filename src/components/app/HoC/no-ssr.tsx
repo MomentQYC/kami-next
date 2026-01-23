@@ -6,7 +6,7 @@ import { useIsClient } from '~/hooks/common/use-is-client'
 export function withNoSSR<K>(FC: FC<K>): FC<K> {
   const FC$: FC<any> = (props) => {
     const isClient = useIsClient()
-    return isClient ? <FC {...props} /> : (null as any)
+    return isClient ? <FC {...props} /> : null
   }
   // @ts-ignore
   return memo((props) => <FC$ {...props} />)

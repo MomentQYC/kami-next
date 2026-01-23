@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { memo } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { usePostCollection } from '~/atoms/collections/post'
 import { Divider } from '~/components/ui/Divider'
 
 export const PostRelated = memo<{ id: string }>((props) => {
-  const post = usePostCollection((state) => state.data.get(props.id), shallow)
+  const post = usePostCollection(useShallow((state) => state.data.get(props.id)))
   if (!post) {
     return null
   }

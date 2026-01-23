@@ -1,9 +1,9 @@
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 
 import { useDetectPadOrMobile } from '~/hooks/ui/use-viewport'
 
 export const withDesktopOnly =
-  <P extends {}>(Component: FC<P>): FC<P> =>
+  <P extends {}>(Component: FC<P>): FC<PropsWithChildren<P>> =>
   ({ children, ...props }) => {
     const isDesktop = !useDetectPadOrMobile()
 

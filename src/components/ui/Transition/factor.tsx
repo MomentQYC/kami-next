@@ -1,7 +1,7 @@
 import type { Target } from 'framer-motion'
 import { AnimatePresence, motion } from 'framer-motion'
-import type { FC, PropsWithChildren } from 'react'
-import { Fragment } from 'react'
+import type { FC, PropsWithChildren, ReactNode } from 'react'
+import { Fragment, memo, useRef } from 'react'
 
 import { microReboundPreset } from '~/constants/spring'
 
@@ -44,7 +44,9 @@ export const createTransitionView = (
     } = props
 
     const { enter = 0, exit = 0 } = timeout
-    const MotionComponent = motion[as]
+    const MotionComponent = (motion as unknown as Record<string, any>)[
+      as
+    ] as typeof motion.div
 
     return (
       <PresenceFC
@@ -55,7 +57,6 @@ export const createTransitionView = (
           (!appear ? (
             props.children
           ) : (
-            // @ts-ignore
             <MotionComponent
               initial={{ ...(initial || from) }}
               animate={{
@@ -66,11 +67,10 @@ export const createTransitionView = (
                   ...animation.enter,
                   delay: enter / 1000,
                 },
-                onTransitionEnd() {
-                  props.onEntered?.()
-                },
               }}
-              // @ts-ignore
+              onAnimationComplete={() => {
+                props.onEntered?.()
+              }}
               exit={{
                 ...from,
                 transition: {

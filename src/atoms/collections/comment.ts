@@ -104,7 +104,7 @@ export const useCommentCollection = createCollection<
       if (!comment) return
 
       const refId =
-        typeof comment.ref === 'string' ? comment.ref : (comment.ref as any).id
+        typeof comment.ref === 'string' ? comment.ref : (comment.ref as CommentModel).id
 
       if (refId !== getState().currentRefId) {
         return

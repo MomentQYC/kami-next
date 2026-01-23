@@ -21,7 +21,7 @@ export const useCalculateNaturalSize = () => {
     },
     initialState,
   )
-  const timer = useRef<any>()
+  const timer = useRef<any>(null)
   const calculateOnImageEl = useCallback(
     (imageEl: HTMLImageElement, parentElWidth?: number) => {
       if (!parentElWidth || !imageEl) {

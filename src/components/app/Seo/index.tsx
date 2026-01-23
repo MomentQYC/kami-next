@@ -1,9 +1,9 @@
 import merge from 'lodash-es/merge'
-import type { NextSeoProps } from 'next-seo'
-import { NextSeo } from 'next-seo'
-import type { OpenGraph } from 'next-seo/lib/types'
+import Head from 'next/head'
+import type { NextSeoProps, OpenGraph } from 'next-seo/pages'
+import { generateNextSeo } from 'next-seo/pages'
 import type { FC } from 'react'
-import { createElement, memo } from 'react'
+import { memo } from 'react'
 
 import { useInitialData } from '~/hooks/app/use-initial-data'
 import { useRandomImage } from '~/hooks/app/use-kami-theme'
@@ -35,7 +35,7 @@ export const Seo: FC<SEOProps> = memo((props) => {
 
   const [randomImage] = useRandomImage()
 
-  return createElement(NextSeo, {
+  const seoProps: NextSeoProps = {
     title,
     titleTemplate: `%s - ${seo.title}`,
     openGraph: merge(
@@ -45,7 +45,7 @@ export const Seo: FC<SEOProps> = memo((props) => {
         },
         type: 'article',
         locale: 'zh-cn',
-        site_name: seo.title || '',
+        siteName: seo.title || '',
         description: description || seo.description || user.introduce || '',
         article: {
           authors: [user.name],
@@ -68,7 +68,8 @@ export const Seo: FC<SEOProps> = memo((props) => {
       cardType: 'summary',
       site: webUrl,
     },
-
     ...rest,
-  })
+  }
+
+  return <Head>{generateNextSeo(seoProps)}</Head>
 })

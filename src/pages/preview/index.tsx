@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import { title } from 'process'
 import type { FC } from 'react'
 import { useEffect } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import type { NoteModel, PageModel, PostModel } from '@mx-space/api-client'
 import { simpleCamelcaseKeys } from '@mx-space/api-client'
@@ -24,8 +24,7 @@ const NotePreviewPage: FC<{ data: NoteModel }> = ({ data }) => {
   const id = data.id
 
   const note = useNoteCollection(
-    (state) => pick(state.data.get(id), ['id', 'text', 'created', 'title']),
-    shallow,
+    useShallow((state) => pick(state.data.get(id), ['id', 'text', 'created', 'title'])),
   )
 
   useEffect(() => {
@@ -48,9 +47,8 @@ const NotePreviewPage: FC<{ data: NoteModel }> = ({ data }) => {
 
 const PostPreviewPage: FC<{ data: PostModel }> = ({ data }) => {
   const post = usePostCollection(
-    (state) =>
-      pick(state.data.get(data.id), ['id', 'title', 'summary', 'text']),
-    shallow,
+    useShallow((state) =>
+      pick(state.data.get(data.id), ['id', 'title', 'summary', 'text'])),
   )
   useEffect(() => {
     usePostCollection.getState().add(data)
@@ -86,9 +84,9 @@ const PostPreviewPage: FC<{ data: PostModel }> = ({ data }) => {
 }
 
 const PagePreviewPage: FC<{ data: PageModel }> = ({ data }) => {
-  const page = usePageCollection((state) => {
+  const page = usePageCollection(useShallow((state) => {
     return pick(state.data.get(data.id), ['subtitle', 'text'])
-  }, shallow)
+  }))
   useEffect(() => {
     usePageCollection.getState().add(data)
   }, [])

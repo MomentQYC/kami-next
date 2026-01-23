@@ -1,5 +1,5 @@
 import { Router } from 'next/router'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import React, { createElement, useEffect } from 'react'
 import type { FallbackProps } from 'react-error-boundary'
 import { ErrorBoundary as ErrorBoundary$ } from 'react-error-boundary'
@@ -22,9 +22,9 @@ function FallbackRender({ error, resetErrorBoundary }) {
   return null
 }
 
-export const ErrorBoundary: FC<{
+export const ErrorBoundary: FC<PropsWithChildren<{
   FallbackComponent?: FC<FallbackProps>
-}> = ({ FallbackComponent, children }) => {
+}>> = ({ FallbackComponent, children }) => {
   return (
     <ErrorBoundary$
       FallbackComponent={(props) => (

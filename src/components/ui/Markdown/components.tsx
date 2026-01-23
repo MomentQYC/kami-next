@@ -2,7 +2,7 @@
 import { clsx } from 'clsx'
 import type { MarkdownToJSX } from 'markdown-to-jsx'
 import { compiler } from 'markdown-to-jsx'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import React, {
   createElement,
   memo,
@@ -37,10 +37,10 @@ export interface MdProps {
   >
   codeBlockFully?: boolean
   className?: string
-  tocSlot?: (props: { headings: HTMLElement[] }) => JSX.Element | null
+  tocSlot?: FC<{ headings: HTMLElement[] }>
 }
 
-export const Markdown: FC<MdProps & MarkdownToJSX.Options> = memo((props) => {
+export const Markdown: FC<PropsWithChildren<MdProps & MarkdownToJSX.Options>> = memo((props) => {
   const {
     value,
     renderers,

@@ -34,9 +34,9 @@ export const FloatPopover: FC<
 
     animate?: boolean
 
-    as?: keyof HTMLElementTagNameMap
+    as?: React.ElementType
   }> &
-    UseFloatingOptions
+  UseFloatingOptions
 > = memo((props) => {
   const {
     headless = false,
@@ -185,17 +185,17 @@ export const FloatPopover: FC<
     trigger,
   ])
 
+  const Component = As as React.ElementType
   const TriggerWrapper = (
-    // @ts-expect-error
-    <As
-      role={trigger === 'both' || trigger === 'click' ? 'button' : 'note'}
+    <Component
+      role={(trigger === 'both' || trigger === 'click') ? 'button' : 'note'}
       tabIndex={0}
       className={clsx('inline-block', wrapperClassNames)}
       ref={refs.setReference}
       {...listener}
     >
       <TriggerComponent />
-    </As>
+    </Component>
   )
 
   if (!props.children) {

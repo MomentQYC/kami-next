@@ -96,7 +96,7 @@ const Image: FC<
 const onImageAnimationEnd: React.AnimationEventHandler<HTMLDivElement> = (
   e,
 ) => {
-  ;(e.target as HTMLElement).dataset.animated = '1'
+  ; (e.target as HTMLElement).dataset.animated = '1'
 }
 
 export type ImageLazyRef = { status: 'loading' | 'loaded' }
@@ -105,7 +105,7 @@ export const ImageLazy = memo(
   forwardRef<
     ImageLazyRef,
     ImageProps &
-      DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
+    DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>
   >((props, ref) => {
     const {
       defaultImage,
@@ -123,7 +123,7 @@ export const ImageLazy = memo(
     } = props
     useImperativeHandle(ref, () => {
       return {
-        status: loaded ? 'loaded' : ('loading' as any),
+        status: (loaded ? 'loaded' : 'loading') as ImageLazyRef['status'],
       }
     })
     const realImageRef = useRef<HTMLImageElement>(null)
@@ -148,10 +148,10 @@ export const ImageLazy = memo(
           image,
           typeof getParentElWidth == 'function'
             ? getParentElWidth(
-                parentElement
-                  ? parseFloat(getComputedStyle(parentElement).width)
-                  : 0,
-              )
+              parentElement
+                ? parseFloat(getComputedStyle(parentElement).width)
+                : 0,
+            )
             : getParentElWidth,
         )
       }
@@ -164,21 +164,20 @@ export const ImageLazy = memo(
           }
 
           // eslint-disable-next-line no-empty
-        } catch {}
+        } catch { }
       }
       if (showErrorMessage) {
         image.onerror = () => {
           try {
             if (placeholderRef && placeholderRef.current) {
-              placeholderRef.current.innerHTML = `<p style="color:${
-                isDarkColorHex(backgroundColor) ? '#eee' : '#333'
-              };z-index:2"><span>图片加载失败!</span><br/>
+              placeholderRef.current.innerHTML = `<p style="color:${isDarkColorHex(backgroundColor) ? '#eee' : '#333'
+                };z-index:2"><span>图片加载失败!</span><br/>
           <a style="margin: 0 12px;word-break:break-all;white-space:pre-wrap;display:inline-block;" href="${escapeHTMLTag(
-            image.src,
-          )}" target="_blank">${escapeHTMLTag(image.src)}</a></p>`
+                  image.src,
+                )}" target="_blank">${escapeHTMLTag(image.src)}</a></p>`
             }
             // eslint-disable-next-line no-empty
-          } catch {}
+          } catch { }
         }
       }
     }, [

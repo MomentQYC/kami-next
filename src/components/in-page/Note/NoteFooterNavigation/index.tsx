@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { memo } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { noteCollection, useNoteCollection } from '~/atoms/collections/note'
 import { Divider } from '~/components/ui/Divider'
@@ -16,12 +16,12 @@ import { useDetectIsNarrowThanLaptop } from '~/hooks/ui/use-viewport'
 import { springScrollToTop } from '~/utils/spring'
 
 export const NoteFooterNavigation: FC<{ id: string }> = memo(({ id }) => {
-  const [prevNid, nextNid] = useNoteCollection<
-    [number | undefined, number | undefined]
-  >((state) => {
-    const [prev, next] = state.relationMap.get(id) || []
-    return [prev?.nid, next?.nid] as [number | undefined, number | undefined]
-  }, shallow)
+  const [prevNid, nextNid] = useNoteCollection(
+    useShallow((state) => {
+      const [prev, next] = state.relationMap.get(id) || []
+      return [prev?.nid, next?.nid] as [number | undefined, number | undefined]
+    }),
+  )
 
   const router = useRouter()
   const { event } = useAnalyze()

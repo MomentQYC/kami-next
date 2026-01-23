@@ -1,6 +1,6 @@
 import { clsx } from 'clsx'
 import { useRouter } from 'next/router'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { useEffect, useRef, useState } from 'react'
 
 import { useUserStore } from '~/atoms/user'
@@ -8,7 +8,7 @@ import { Overlay } from '~/components/ui/Overlay'
 import { TrackerAction } from '~/constants/tracker'
 import { useAnalyze } from '~/hooks/app/use-analyze'
 
-export const BanCopy: FC = (props) => {
+export const BanCopy: FC<PropsWithChildren> = (props) => {
   const [showCopyWarn, setShowCopyWarn] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const { event } = useAnalyze()

@@ -15,7 +15,7 @@ const isProd = process.env.NODE_ENV === 'production'
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line import/no-mutable-exports
 let configs = {
-  swcMinify: true,
+  turbopack: {},
   experimental: {
     scrollRestoration: true,
   },
@@ -46,9 +46,6 @@ let configs = {
   },
   output: 'standalone',
   assetPrefix: isProd ? env.ASSETPREFIX || undefined : undefined,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   async rewrites() {
     return {
       beforeFiles: [

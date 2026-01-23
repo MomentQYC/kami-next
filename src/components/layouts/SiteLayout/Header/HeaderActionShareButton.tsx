@@ -33,7 +33,7 @@ export const HeaderActionShareButton: FC = () => {
 }
 
 export const HeaderActionButtonWithIcon: FC<{
-  icon: JSX.Element
+  icon: React.JSX.Element
   title: string
   onClick: () => void
 }> = memo(({ icon, title, onClick }) => {

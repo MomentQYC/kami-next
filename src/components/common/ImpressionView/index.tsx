@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { memo, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
@@ -10,7 +10,7 @@ type ImpressionProps = {
   action?: TrackerAction
   onTrack?: () => any
 }
-export const ImpressionView: FC<{ shouldTrack?: boolean } & ImpressionProps> = (
+export const ImpressionView: FC<PropsWithChildren<{ shouldTrack?: boolean } & ImpressionProps>> = (
   props,
 ) => {
   const { shouldTrack, ...rest } = props
@@ -20,7 +20,7 @@ export const ImpressionView: FC<{ shouldTrack?: boolean } & ImpressionProps> = (
   return <ImpressionView$ {...rest} />
 }
 
-const ImpressionView$: FC<ImpressionProps> = memo((props) => {
+const ImpressionView$: FC<PropsWithChildren<ImpressionProps>> = memo((props) => {
   const [impression, setImpression] = useState(false)
   const { event } = useAnalyze()
   const { ref } = useInView({

@@ -219,8 +219,7 @@ const TimeLineView: NextPage<TimeLineViewProps> = (props) => {
     <ArticleLayout
       title={!props.memory ? '时间线' : '回忆'}
       subtitle={[
-        `共有 ${
-          arr.flat(2).filter((i) => typeof i === 'object').length
+        `共有 ${arr.flat(2).filter((i) => typeof i === 'object').length
         } 篇文章，${!props.memory ? '再接再厉' : '回顾一下从前吧'}`,
       ]}
       delay={500}
@@ -296,18 +295,24 @@ enum TimelineType {
 }
 TimeLineView.getInitialProps = async (ctx) => {
   const query = ctx.query
-  const { type, year, memory } = query as any
-  const Type = {
-    post: TimelineType.Post,
-    note: TimelineType.Note,
-  }[type as any] as number | undefined
+  const { type, year, memory } = query as {
+    type: 'post' | 'note'
+    year: string
+    memory: string
+  }
+  const Type = (
+    {
+      post: TimelineType.Post,
+      note: TimelineType.Note,
+    } as const
+  )[type] as number | undefined
   const payload = await apiClient.aggregate.getTimeline({
     type: Type,
-    year,
+    year: year ? +year : undefined,
   })
   return {
     ...payload.data,
     memory: !!memory,
-  } as TimeLineViewProps
+  } as unknown as TimeLineViewProps
 }
 export default wrapperNextPage(TimeLineView)

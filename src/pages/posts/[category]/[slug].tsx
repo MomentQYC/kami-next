@@ -62,7 +62,7 @@ const CommentLazy = lazy(() =>
 )
 
 const useUpdatePost = (post: ModelWithDeleted<PostModel>) => {
-  const beforeModel = useRef<PostModel>()
+  const beforeModel = useRef<PostModel | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -115,6 +115,20 @@ const useUpdatePost = (post: ModelWithDeleted<PostModel>) => {
 }
 
 const Seo$: FC<{ id: string }> = ({ id }) => {
+  const post = usePostCollection((state) => {
+    const item = state.data.get(id)!
+    return {
+      title: item.title,
+      summary: item.summary,
+      category: item.category,
+      created: item.created,
+      modified: item.modified,
+      tags: item.tags,
+      text: item.text,
+      images: item.images,
+      meta: item.meta,
+    }
+  })
   const {
     title,
     summary,
@@ -125,19 +139,7 @@ const Seo$: FC<{ id: string }> = ({ id }) => {
     text,
     images,
     meta,
-  } = usePostCollection((state) =>
-    pick(state.data.get(id)!, [
-      'title',
-      'summary',
-      'created',
-      'modified',
-      'category',
-      'tags',
-      'text',
-      'images',
-      'meta',
-    ]),
-  )
+  } = post
   const description = summary ?? getSummaryFromMd(text).slice(0, 150)
   return (
     <Seo
@@ -180,9 +182,8 @@ const FooterActionBar: FC<{ id: string }> = ({ id }) => {
         },
         {
           icon: <FeHash />,
-          name: `${post.category.name}${
-            post.tags.length ? `[${post.tags[0]}]` : ''
-          }`,
+          name: `${post.category.name}${post.tags.length ? `[${post.tags[0]}]` : ''
+            }`,
 
           tip: () => (
             <div className="leading-7">
@@ -265,22 +266,21 @@ const PostUpdateObserver: FC<{ id: string }> = memo(({ id }) => {
 PostUpdateObserver.displayName = 'PostUpdateObserver'
 
 export const PostView: PageOnlyProps = (props) => {
-  const post = usePostCollection(
-    (state) =>
-      pick(state.data.get(props.id)!, [
-        'title',
-        'category',
-        'id',
-        'images',
-        'summary',
-        'created',
-        'modified',
-        'text',
-        'copyright',
-        'allowComment',
-      ]),
-    shallow,
-  )
+  const post = usePostCollection((state) => {
+    const item = state.data.get(props.id)!
+    return {
+      title: item.title,
+      category: item.category,
+      id: item.id,
+      images: item.images,
+      summary: item.summary,
+      created: item.created,
+      modified: item.modified,
+      text: item.text,
+      copyright: item.copyright,
+      allowComment: item.allowComment,
+    }
+  })
 
   const {
     url: { webUrl },
@@ -373,7 +373,7 @@ const NextPostView: NextPage<PostModel> = (props) => {
 
 NextPostView.getInitialProps = async (ctx) => {
   const { query } = ctx
-  const { category, slug } = query as any
+  const { category, slug } = query as { category: string; slug: string }
   const data = await usePostCollection.getState().fetchBySlug(category, slug)
 
   return data

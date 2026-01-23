@@ -24,19 +24,17 @@ export const HighLighter: FC<Props> = (props) => {
       colorMode: state.colorMode,
       isPrintMode: state.mediaType === 'print',
     }),
-    shallow,
   )
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(value)
     message.success('COPIED!')
   }, [value])
 
-  const prevThemeCSS = useRef<ReturnType<typeof loadStyleSheet>>()
+  const prevThemeCSS = useRef<ReturnType<typeof loadStyleSheet> | null>(null)
 
   useInsertionEffect(() => {
     const css = loadStyleSheet(
-      `https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/prism-themes/1.9.0/prism-one-${
-        isPrintMode ? 'light' : colorMode
+      `https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/prism-themes/1.9.0/prism-one-${isPrintMode ? 'light' : colorMode
       }.css`,
     )
 

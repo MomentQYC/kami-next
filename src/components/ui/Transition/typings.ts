@@ -1,7 +1,7 @@
 import type {
   HTMLMotionProps,
-  Inertia,
-  Keyframes,
+  inertia,
+  keyframes,
   Spring,
   Tween,
   motion,
@@ -19,8 +19,8 @@ export interface BaseTransitionProps extends HTMLMotionProps<'div'> {
   }
 
   animation?: {
-    enter?: Tween | Spring | Keyframes | Inertia
-    exit?: Tween | Spring | Keyframes | Inertia
+    enter?: Tween | Spring | typeof keyframes | typeof inertia
+    exit?: Tween | Spring | typeof keyframes | typeof inertia
   }
   /**
    * @default true

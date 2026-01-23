@@ -36,10 +36,14 @@ const PostListPage: NextPage<PaginateResult<PostModel>> = () => {
   }, [router.query.page, router.query.year])
 
   const fetch = async () => {
-    const { page, year, size = 10 } = router.query as any,
-      payload = await apiClient.post.getList(page, size, {
-        year: +year || undefined,
-      })
+    const { page, year, size = '10' } = router.query as {
+      page: string
+      year: string
+      size: string
+    }
+    const payload = await apiClient.post.getList(+page || 1, +size || 10, {
+      year: +year || undefined,
+    })
     setPagination(payload.pagination)
     setPosts(payload.data)
   }

@@ -68,7 +68,7 @@ const CategoryListView: NextPage<CategoryListViewProps> = (props) => {
 CategoryListView.getInitialProps = async (ctx) => {
   const { query } = ctx
 
-  const { slug } = query as any
+  const { slug } = query as { slug: string }
   const data = await apiClient.category.getCategoryByIdOrSlug(slug)
 
   return {

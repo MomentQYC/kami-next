@@ -2,7 +2,7 @@ import classNames from 'clsx'
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useAppStore } from '~/atoms/app'
 import { useIsLogged } from '~/atoms/user'
@@ -57,11 +57,10 @@ export const Header: FC = () => {
 
   const [drawerOpen, setDrawerOpen] = useState(false)
   const appStore = useAppStore(
-    (state) => ({
+    useShallow((state) => ({
       scrollDirection: state.scrollDirection,
       viewport: state.viewport,
-    }),
-    shallow,
+    })),
   )
   const isOverPostTitleHeight = useIsOverPostTitleHeight()
   const showPageHeader = useMemo(

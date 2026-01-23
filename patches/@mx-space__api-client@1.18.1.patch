@@ -1,0 +1,174 @@
+diff --git a/controllers/ack.ts b/controllers/ack.ts
+deleted file mode 100644
+index c1a0e84346a586cf6fba8efddcdd40279777b39e..0000000000000000000000000000000000000000
+diff --git a/controllers/activity.ts b/controllers/activity.ts
+deleted file mode 100644
+index a725aefa92c458b798309bc5b1ca73405c4e376b..0000000000000000000000000000000000000000
+diff --git a/controllers/aggregate.ts b/controllers/aggregate.ts
+deleted file mode 100644
+index 3d298a18da772ac7fca1377d8f4c14135868e409..0000000000000000000000000000000000000000
+diff --git a/controllers/ai.ts b/controllers/ai.ts
+deleted file mode 100644
+index 1e22da5ced7d617d8a530a043451f5dff3ee046b..0000000000000000000000000000000000000000
+diff --git a/controllers/base.ts b/controllers/base.ts
+deleted file mode 100644
+index 96d7549e424e4f20b631dd0d10e9c6f567161aec..0000000000000000000000000000000000000000
+diff --git a/controllers/category.ts b/controllers/category.ts
+deleted file mode 100644
+index 50b24631fbd661afc022e691d2cd76c5e81eb43e..0000000000000000000000000000000000000000
+diff --git a/controllers/comment.ts b/controllers/comment.ts
+deleted file mode 100644
+index 087994806bb3d76f6f705357e8e3756976572ee0..0000000000000000000000000000000000000000
+diff --git a/controllers/index.ts b/controllers/index.ts
+deleted file mode 100644
+index dfe0f0e3f7b23749371492cc738dd4d455d510b1..0000000000000000000000000000000000000000
+diff --git a/controllers/link.ts b/controllers/link.ts
+deleted file mode 100644
+index 34ed530fc0fd49783fff73e2115b8d2e02b5569e..0000000000000000000000000000000000000000
+diff --git a/controllers/note.ts b/controllers/note.ts
+deleted file mode 100644
+index 46f0a71954c1cb3b513f1990d3960024132ab60b..0000000000000000000000000000000000000000
+diff --git a/controllers/page.ts b/controllers/page.ts
+deleted file mode 100644
+index 74128a3f01efdf54f56efe3b9d45e8205f896f42..0000000000000000000000000000000000000000
+diff --git a/controllers/post.ts b/controllers/post.ts
+deleted file mode 100644
+index aca7f52be0b3e888de9156dcfa20fd927e4f1603..0000000000000000000000000000000000000000
+diff --git a/controllers/project.ts b/controllers/project.ts
+deleted file mode 100644
+index 2d9a3046e3c64fc32165990ede0890e380155212..0000000000000000000000000000000000000000
+diff --git a/controllers/recently.ts b/controllers/recently.ts
+deleted file mode 100644
+index a9725d7db91d40a4588bc4febb2817f0337c8f74..0000000000000000000000000000000000000000
+diff --git a/controllers/say.ts b/controllers/say.ts
+deleted file mode 100644
+index 14f0770a47308f7b2a250f4329e2385e4a7bfd46..0000000000000000000000000000000000000000
+diff --git a/controllers/search.ts b/controllers/search.ts
+deleted file mode 100644
+index a0e03af467bde22406ad30bfb3475fd3cedfe453..0000000000000000000000000000000000000000
+diff --git a/controllers/severless.ts b/controllers/severless.ts
+deleted file mode 100644
+index 05b5cd4a669f86e7ee4014b61404682fef038a14..0000000000000000000000000000000000000000
+diff --git a/controllers/snippet.ts b/controllers/snippet.ts
+deleted file mode 100644
+index f4d335ec74545194b26db1d7a38546095fdc71b8..0000000000000000000000000000000000000000
+diff --git a/controllers/subscribe.ts b/controllers/subscribe.ts
+deleted file mode 100644
+index 97af6a6f6b1917a14118e5125be1cc37d234a304..0000000000000000000000000000000000000000
+diff --git a/controllers/topic.ts b/controllers/topic.ts
+deleted file mode 100644
+index b68eddba14c6364b0e63bef9ecde91381b638b10..0000000000000000000000000000000000000000
+diff --git a/controllers/user.ts b/controllers/user.ts
+deleted file mode 100644
+index 7fef250934b67df53b2608b088bd90e0e100a5a1..0000000000000000000000000000000000000000
+diff --git a/dtos/comment.ts b/dtos/comment.ts
+deleted file mode 100644
+index 84765f70ea38df5bda342b13c91fdf9efb2743f7..0000000000000000000000000000000000000000
+diff --git a/dtos/index.ts b/dtos/index.ts
+deleted file mode 100644
+index ed051c229ad0882e574ec93d5ea29f147a73b2fc..0000000000000000000000000000000000000000
+diff --git a/index.ts b/index.ts
+deleted file mode 100644
+index 68fcb8e045c41bd743bb0b56bcf9c8c89a6d1be0..0000000000000000000000000000000000000000
+diff --git a/interfaces/adapter.ts b/interfaces/adapter.ts
+deleted file mode 100644
+index 8028bec4709d9e7374c251bbf2e8c7e07c3eb095..0000000000000000000000000000000000000000
+diff --git a/interfaces/client.ts b/interfaces/client.ts
+deleted file mode 100644
+index b0cb05c3e1ccef2d2606bd4eac45739d0e76cfaf..0000000000000000000000000000000000000000
+diff --git a/interfaces/controller.ts b/interfaces/controller.ts
+deleted file mode 100644
+index 8d5ccae7e7a5ef38bce2497f08ffc28be8167d76..0000000000000000000000000000000000000000
+diff --git a/interfaces/instance.ts b/interfaces/instance.ts
+deleted file mode 100644
+index 66924a756cf14799b82865dcc0b0b4224ffc18aa..0000000000000000000000000000000000000000
+diff --git a/interfaces/options.ts b/interfaces/options.ts
+deleted file mode 100644
+index 04aa2d4446ea421694173c3c6b8146a1d2654958..0000000000000000000000000000000000000000
+diff --git a/interfaces/params.ts b/interfaces/params.ts
+deleted file mode 100644
+index 69f9db1b248b15779467c8fe4f473ee6be8eeaec..0000000000000000000000000000000000000000
+diff --git a/interfaces/request.ts b/interfaces/request.ts
+deleted file mode 100644
+index 0dd1ae88a630fc29e929db37b5b0febd96d87ce3..0000000000000000000000000000000000000000
+diff --git a/interfaces/types.ts b/interfaces/types.ts
+deleted file mode 100644
+index 97548fd4885d71c50c841c38e957487789996819..0000000000000000000000000000000000000000
+diff --git a/mod-dts.mjs b/mod-dts.mjs
+deleted file mode 100644
+index 462c0d16d68043b39d3e9eeb1b3d1eab9c980c72..0000000000000000000000000000000000000000
+diff --git a/models/activity.ts b/models/activity.ts
+deleted file mode 100644
+index 9efcb9b5c95306fdb381f6699920f3e7838f3177..0000000000000000000000000000000000000000
+diff --git a/models/aggregate.ts b/models/aggregate.ts
+deleted file mode 100644
+index 456e54755a4c69966242eb478ca3d45d74cf60c7..0000000000000000000000000000000000000000
+diff --git a/models/ai.ts b/models/ai.ts
+deleted file mode 100644
+index 3874b3c53051aae765a136b0ae7af62184dd8169..0000000000000000000000000000000000000000
+diff --git a/models/auth.ts b/models/auth.ts
+deleted file mode 100644
+index 6de6753e67a28f2947184669b3e461d8b1ca109c..0000000000000000000000000000000000000000
+diff --git a/models/base.ts b/models/base.ts
+deleted file mode 100644
+index ffbd1511281d46ee54f24d2a6db450ad96d808cd..0000000000000000000000000000000000000000
+diff --git a/models/category.ts b/models/category.ts
+deleted file mode 100644
+index 785ab8700a3e198af39d0e5676103d07deb9ae2f..0000000000000000000000000000000000000000
+diff --git a/models/comment.ts b/models/comment.ts
+deleted file mode 100644
+index e839496f11d16a237b751675ded0c313596722a0..0000000000000000000000000000000000000000
+diff --git a/models/index.ts b/models/index.ts
+deleted file mode 100644
+index 4dfa1e4e86f0e62185bebf99941cda4b13ba5ded..0000000000000000000000000000000000000000
+diff --git a/models/link.ts b/models/link.ts
+deleted file mode 100644
+index 69d61bcce77258a9bf6e391292e18e664d3b1379..0000000000000000000000000000000000000000
+diff --git a/models/note.ts b/models/note.ts
+deleted file mode 100644
+index f3fd354a43e13bc777cf4ba6a33b8e941340cade..0000000000000000000000000000000000000000
+diff --git a/models/page.ts b/models/page.ts
+deleted file mode 100644
+index 5e29a42aea3597863649edd22a33061e9b4fea64..0000000000000000000000000000000000000000
+diff --git a/models/post.ts b/models/post.ts
+deleted file mode 100644
+index 15bf1d0ad2f179a8d989d35b68574139c047dca0..0000000000000000000000000000000000000000
+diff --git a/models/project.ts b/models/project.ts
+deleted file mode 100644
+index 3530a8844b7b8a7cc7c684a94bbdc027573b1420..0000000000000000000000000000000000000000
+diff --git a/models/reader.ts b/models/reader.ts
+deleted file mode 100644
+index aa947a3194d2c7d4648bdc7bd82916fd6b504727..0000000000000000000000000000000000000000
+diff --git a/models/recently.ts b/models/recently.ts
+deleted file mode 100644
+index 857fbe5cc6624253ee7e5ead81109c13609288c6..0000000000000000000000000000000000000000
+diff --git a/models/say.ts b/models/say.ts
+deleted file mode 100644
+index 28491cba1f0b4da0828e7dd4f3504e7b55fa985a..0000000000000000000000000000000000000000
+diff --git a/models/setting.ts b/models/setting.ts
+deleted file mode 100644
+index 169c850113fb30cf2ceeb0e0abdf6e577b7c75f7..0000000000000000000000000000000000000000
+diff --git a/models/snippet.ts b/models/snippet.ts
+deleted file mode 100644
+index 560c1377658a108a8e0eae840ce2085eb8b5a8fd..0000000000000000000000000000000000000000
+diff --git a/models/subscribe.ts b/models/subscribe.ts
+deleted file mode 100644
+index adeab96b1631d1c63171797a1e769ede3e6b5250..0000000000000000000000000000000000000000
+diff --git a/models/topic.ts b/models/topic.ts
+deleted file mode 100644
+index ffe79164cade20edc128fcc185c1cfaab901a147..0000000000000000000000000000000000000000
+diff --git a/models/user.ts b/models/user.ts
+deleted file mode 100644
+index 15d25d4d8efdd9e97590bd3ee6332d27c2da0649..0000000000000000000000000000000000000000
+diff --git a/test.d.ts b/test.d.ts
+deleted file mode 100644
+index 6d99be56bc6c1648c96ccca7e7fd9185b8facaf5..0000000000000000000000000000000000000000
+diff --git a/tsconfig.json b/tsconfig.json
+deleted file mode 100644
+index 85349fab4d6bd04ea1bb63a55bd88412becbdd81..0000000000000000000000000000000000000000
+diff --git a/tsdown.config.ts b/tsdown.config.ts
+deleted file mode 100644
+index d29d0ef955c1c8bc28e2ae79c4eadd962ac3a474..0000000000000000000000000000000000000000
+diff --git a/vitest.config.ts b/vitest.config.ts
+deleted file mode 100644
+index 522403a25ce11951c460b4e4a60d811c3aaaf368..0000000000000000000000000000000000000000

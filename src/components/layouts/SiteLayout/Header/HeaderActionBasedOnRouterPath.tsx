@@ -23,7 +23,7 @@ export const HeaderActionBasedOnRouterPath: FC = memo(() => {
     const titleComp = <div className={styles['site-info']}>{title}</div>
     switch (pathname) {
       case '/notes/[id]': {
-        const id = parseInt(router.query.id as any)
+        const id = parseInt(router.query.id as string)
 
         if (id && typeof id === 'number') {
           return (

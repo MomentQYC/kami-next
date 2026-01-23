@@ -106,7 +106,7 @@ export const MImage: FC<
   >
 > = (props) => {
   const { src, alt, title } = props
-  const sanitizedUrl = sanitizeUrl(src!)
+  const sanitizedUrl = sanitizeUrl(src as string)
   const isClient = useIsClient()
   const imageCaption =
     title ||

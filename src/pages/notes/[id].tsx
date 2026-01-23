@@ -77,7 +77,7 @@ const NoteFooterActionBar = lazy(() =>
 )
 
 const useUpdateNote = (note: ModelWithDeleted<NoteModel>) => {
-  const beforeModel = useRef<NoteModel>()
+  const beforeModel = useRef<NoteModel | null>(null)
   const { event } = useAnalyze()
   useEffect(() => {
     const hideMessage = '此手记已被作者删除或隐藏'
@@ -97,7 +97,7 @@ const useUpdateNote = (note: ModelWithDeleted<NoteModel>) => {
     }
 
     if (before.id === note.id) {
-      if (note.hide && !useUserStore.getState().isLogged) {
+      if ('hide' in note && note.hide && !useUserStore.getState().isLogged) {
         message.error(hideMessage)
         return
       }
@@ -124,7 +124,7 @@ const useUpdateNote = (note: ModelWithDeleted<NoteModel>) => {
     note?.text,
     note?.modified,
     note?.weather,
-    note?.hide,
+    'hide' in note ? note.hide : undefined,
     note?.isDeleted,
     note?.topicId,
   ])
@@ -141,7 +141,7 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
     if (router.query.id === 'latest') {
       router.replace({
         pathname: `/notes/${note.nid}`,
-        query: { ...omit(router.query, 'id' as any) },
+        query: { ...omit(router.query, ['id']) },
       })
     }
   }, [note.nid])
@@ -171,26 +171,24 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
   })
 
   const tips = useMemo(() => {
-    return `创建于 ${parseDate(note.created, 'YYYY 年 M 月 D 日 dddd')}${
-      note.modified
-        ? `，修改于 ${parseDate(note.modified, 'YYYY 年 M 月 D 日 dddd')}`
-        : ''
-    }，全文字数：${wordCount}，阅读次数：${note.count.read}，喜欢次数：${
-      note.count.like
-    }`
+    return `创建于 ${parseDate(note.created, 'YYYY 年 M 月 D 日 dddd')}${note.modified
+      ? `，修改于 ${parseDate(note.modified, 'YYYY 年 M 月 D 日 dddd')}`
+      : ''
+      }，全文字数：${wordCount}，阅读次数：${note.count.read}，喜欢次数：${note.count.like
+      }`
   }, [note.count.like, note.count.read, note.created, note.modified, wordCount])
 
   const isSecret = note.publicAt ? dayjs(note.publicAt).isAfter(new Date()) : false
   const secretDate = useMemo(() => new Date(note.publicAt!), [note.publicAt])
   const dateFormat = note.publicAt
     ? Intl.DateTimeFormat('zh-cn', {
-        hour12: false,
-        hour: 'numeric',
-        minute: 'numeric',
-        year: 'numeric',
-        day: 'numeric',
-        month: 'long',
-      }).format(secretDate)
+      hour12: false,
+      hour: 'numeric',
+      minute: 'numeric',
+      year: 'numeric',
+      day: 'numeric',
+      month: 'long',
+    }).format(secretDate)
     : ''
   useEffect(() => {
     let timer: any
@@ -340,7 +338,7 @@ PP.getInitialProps = async (ctx) => {
   const id = ctx.query.id as string
   const password = ctx.query.password as string
   if (id == 'latest') {
-    return await noteCollection.fetchLatest()
+    return (await noteCollection.fetchLatest()) as NoteModel
   }
   try {
     const res = await noteCollection.fetchById(
@@ -349,13 +347,13 @@ PP.getInitialProps = async (ctx) => {
       { force: true },
     )
 
-    return res as any
-  } catch (err: any) {
+    return res as NoteModel
+  } catch (err: unknown) {
     if (err instanceof RequestError) {
       if ((err.raw as AxiosError).response?.status !== 403) {
         throw err
       }
-      return { needPassword: true, id: +id }
+      return { needPassword: true, id: String(id) }
     } else {
       throw err
     }

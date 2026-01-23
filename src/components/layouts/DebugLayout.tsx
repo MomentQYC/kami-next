@@ -1,10 +1,10 @@
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { memo, useEffect } from 'react'
 
 import { useAppStore } from '~/atoms/app'
 import { ModalStackProvider } from '~/components/ui/Modal'
 
-export const DebugLayout: FC = memo((props) => {
+export const DebugLayout: FC<PropsWithChildren> = memo((props) => {
   useEffect(() => {
     useAppStore.getState().updateViewport()
   }, [])

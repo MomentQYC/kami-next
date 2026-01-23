@@ -1,5 +1,5 @@
 import { sanitizeUrl } from 'markdown-to-jsx'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import { useEffect } from 'react'
 
 import { useProjectCollection } from '~/atoms/collections/project'
@@ -87,7 +87,7 @@ export const ProjectDetail: FC<{ id: string }> = (props) => {
   )
 }
 
-const Link: FC<{ href: string }> = (props) => {
+const Link: FC<PropsWithChildren<{ href: string }>> = (props) => {
   return (
     <a
       href={props.href}

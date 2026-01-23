@@ -9,13 +9,13 @@ import { springScrollToElement } from '~/utils/spring'
 import styles from './index.module.css'
 
 interface CommentProps {
-  author: JSX.Element
-  avatar: JSX.Element
-  content: JSX.Element
+  author: React.JSX.Element
+  avatar: React.JSX.Element
+  content: React.JSX.Element
   datetime: string
   commentKey: string
   location?: string
-  actions?: (JSX.Element | null)[]
+  actions?: (React.JSX.Element | null)[]
   highlight?: boolean
   whispers?: boolean
 }

@@ -21,7 +21,6 @@ export const noop = /* @__PURE__ */ new Proxy(_noop, {
     return noop
   },
   apply() {
-    // eslint-disable-next-line prefer-rest-params
-    return Reflect.apply(noop, this, arguments)
+    return noop
   },
 })

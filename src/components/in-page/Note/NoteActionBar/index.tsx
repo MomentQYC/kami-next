@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import type { FC } from 'react'
 import { useRef } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useNoteCollection } from '~/atoms/collections/note'
 import { RelativeTime } from '~/components/common/RelativeTime'
@@ -21,7 +21,7 @@ import { useAnalyze } from '~/hooks/app/use-analyze'
 import { useThemeConfig } from '~/hooks/app/use-initial-data'
 
 export const NoteFooterActionBar: FC<{ id: string }> = ({ id }) => {
-  const note = useNoteCollection((state) => state.get(id), shallow)
+  const note = useNoteCollection(useShallow((state) => state.get(id)))
   const isLiked =
     // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
     useNoteCollection((state) => state.isLiked(note?.nid!) || false)

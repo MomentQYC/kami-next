@@ -9,7 +9,7 @@ import styles from './link.module.css'
 export const MLink: FC<{
   href: string
   title?: string
-  children?: JSX.Element | JSX.Element[]
+  children?: React.JSX.Element | React.JSX.Element[]
 }> = memo((props) => {
   const ExtendIcon = useMemo(
     () => (

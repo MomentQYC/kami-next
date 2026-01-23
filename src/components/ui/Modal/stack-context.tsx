@@ -1,8 +1,6 @@
 import { clsx } from 'clsx'
 import type {
   FC,
-  FunctionComponentElement,
-  ReactChildren,
   ReactElement,
   ReactNode,
 } from 'react'
@@ -88,14 +86,14 @@ interface UniversalProps {
 }
 
 interface IModalStackStateType extends UniversalProps {
-  component: FunctionComponentElement<any>
+  component: ReactElement
   id: string
   disposer: Disposer
 }
 
 export const ModalStackProvider: FC<{
   isMobileViewport: boolean
-  children?: ReactNode | ReactChildren
+  children?: ReactNode
 }> = memo((props) => {
   const { children, isMobileViewport } = props
   const [modalStack, setModalStack] = useState<IModalStackStateType[]>([])
@@ -111,11 +109,11 @@ export const ModalStackProvider: FC<{
   >(new Map())
 
   const modalRefMap = useRef(
-    new WeakMap<FunctionComponentElement<any>, ModalRefObject>(),
+    new WeakMap<ReactElement, ModalRefObject>(),
   )
 
   const dismissFnMapRef = useRef(
-    new WeakMap<FunctionComponentElement<any>, () => any>(),
+    new WeakMap<ReactElement, () => any>(),
   )
 
   const isMobileViewportRef = useStateToRef(isMobileViewport)
@@ -139,7 +137,7 @@ export const ModalStackProvider: FC<{
 
     const id = uniqueId('modal-stack-')
 
-    let modalChildren: ReactChildren | ReactNode[] | ReactNode
+    let modalChildren: ReactNode[] | ReactNode
     if (React.isValidElement(component)) {
       modalChildren = component
       // JSX
@@ -174,7 +172,7 @@ export const ModalStackProvider: FC<{
       }
     }
 
-    const $modalElement: FunctionComponentElement<any> = createElement(
+    const $modalElement: ReactElement = createElement(
       Modal,
       {
         ...modalProps,
@@ -294,8 +292,8 @@ export const ModalStackProvider: FC<{
               center={!(isMobileViewport && useBottomDrawerInMobile)}
               standaloneWrapperClassName={clsx(
                 isMobileViewport &&
-                  useBottomDrawerInMobile &&
-                  'items-end justify-center',
+                useBottomDrawerInMobile &&
+                'items-end justify-center',
               )}
               show={extraProps.overlayShow}
               onClose={() => disposer()}

@@ -48,7 +48,7 @@ export const iconMap = {
 }
 
 let hasAppended = false
-export const FontIcon: FC<{ icon?: JSX.Element | string }> = memo((props) => {
+export const FontIcon: FC<{ icon?: React.JSX.Element | string }> = memo((props) => {
   useEffect(() => {
     if (typeof props.icon == 'string' && /^fa[sbldr]?\sfa-/.test(props.icon)) {
       if (hasAppended) {

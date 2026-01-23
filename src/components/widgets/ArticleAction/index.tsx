@@ -8,10 +8,10 @@ import { EntypoCreativeCommons } from '~/components/ui/Icons/for-post'
 import styles from './index.module.css'
 
 export type BaseAction = {
-  icon?: JSX.Element
-  name: string | number | JSX.Element
+  icon?: React.JSX.Element
+  name: string | number | React.JSX.Element
   color?: string
-  tip?: string | JSX.Element | FC
+  tip?: string | React.JSX.Element | FC
 
   wrapperComponent?: FC<{ children: ReactNode }>
 }
@@ -22,8 +22,8 @@ export interface ActionProps
   actions?: (
     | false
     | (BaseAction & {
-        callback: () => void
-      })
+      callback: () => void
+    })
   )[]
   copyright?: boolean
 }
@@ -128,9 +128,9 @@ export const ArticleFooterAction: FC<ActionProps> = memo((props) => {
   )
 })
 
-const mountJSXElementOrFC = (render: FC | ReactNode | JSX.Element) => {
+const mountJSXElementOrFC = (render: FC | ReactNode | React.JSX.Element) => {
   if (typeof render === 'function') {
-    return createElement(render as any)
+    return createElement(render as FC)
   }
   return render
 }

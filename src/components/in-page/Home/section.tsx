@@ -82,7 +82,7 @@ const SectionsInternal: FC<AggregateTop> = ({ notes, posts }) => {
 
   const { doAnimation } = useHomePageViewContext()
 
-  const sectionMap: Record<HomePageSectionName, JSX.Element | null> = {
+  const sectionMap: Record<HomePageSectionName, React.JSX.Element | null> = {
     post: sections.postSection ? (
       <SectionNews {...sections.postSection} key="1" />
     ) : null,
@@ -100,7 +100,7 @@ const SectionsInternal: FC<AggregateTop> = ({ notes, posts }) => {
       />
     ) : null,
   }
-  const SectionElementList: (JSX.Element | null)[] = sectionShouldUsedList.map(
+  const SectionElementList: (React.JSX.Element | null)[] = sectionShouldUsedList.map(
     (currentSectionName) => {
       return sectionMap[currentSectionName]
     },
@@ -131,7 +131,10 @@ function buildRoute<T extends { id: string } & { nid?: number }>(
 ): { as: string; href: string } {
   switch (type) {
     case 'Post': {
-      const { slug, category } = obj as any
+      const { slug, category } = obj as unknown as {
+        slug: string
+        category: { slug: string }
+      }
       return {
         as: `/posts/${category.slug}/${slug}`,
         href: `/posts/[category]/[slug]`,

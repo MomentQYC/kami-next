@@ -1,7 +1,7 @@
 import { clsx } from 'clsx'
 import type { FC } from 'react'
 import { memo, useDeferredValue, useEffect } from 'react'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useMusicStore, usePlayProgress } from '~/atoms/music'
 import { Seo } from '~/components/app/Seo'
@@ -127,12 +127,11 @@ const PlayingSongItem: FC<SongItemProps> = memo((props) => {
     duration: totalTime,
     time: currentTime,
   } = useMusicStore(
-    (state) => ({
+    useShallow((state) => ({
       playId: state.playId,
       duration: state.duration,
       time: state.time,
-    }),
-    shallow,
+    })),
   )
   const { event } = useAnalyze()
   const playProgress = useDeferredValue(usePlayProgress())

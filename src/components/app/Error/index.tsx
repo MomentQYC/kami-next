@@ -33,7 +33,7 @@ export const ErrorView: NextPage<{
   statusCode: number | string
   showBackButton?: boolean
   showRefreshButton?: boolean
-  description?: string | JSX.Element
+  description?: string | React.JSX.Element
 
   // 适用于无数据状态
   noSeo?: boolean

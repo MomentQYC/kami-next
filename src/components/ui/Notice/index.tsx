@@ -8,8 +8,8 @@ import { useIsClient } from '~/hooks/common/use-is-client'
 import styles from './index.module.css'
 
 interface NoticePanelProps {
-  icon: JSX.Element
-  text: string | JSX.Element
+  icon: React.JSX.Element
+  text: string | React.JSX.Element
 }
 
 const Notice: FC<NoticePanelProps> = (props) => {
@@ -38,22 +38,34 @@ export const NoticePanel: FC<
 > = (props) => {
   const isClient = useIsClient()
 
-  const timerRef = useRef<any>()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleWantoDisappear = useCallback(() => {
-    timerRef.current = clearTimeout(timerRef.current)
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
+
     timerRef.current = setTimeout(() => {
       props.onExited()
     }, props.duration || 3000)
   }, [props])
 
   useEffect(() => {
-    timerRef.current = clearTimeout(timerRef.current)
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
 
     timerRef.current = setTimeout(() => {
       handleWantoDisappear()
     }, props.duration || 3000)
-  }, [props, handleWantoDisappear])
+
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current)
+      }
+    }
+  }, [props.duration, handleWantoDisappear])
+
 
   if (!isClient) {
     return null

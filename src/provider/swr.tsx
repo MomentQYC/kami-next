@@ -10,7 +10,7 @@ const swrConfig = {
   provider: localStorageProvider,
 } satisfies FullConfiguration & ProviderConfiguration
 
-export const SWRProvider: FC<{ children?: JSX.Element }> = ({ children }) => {
+export const SWRProvider: FC<{ children?: React.JSX.Element }> = ({ children }) => {
   return <SWRConfig value={swrConfig}>{children}</SWRConfig>
 }
 

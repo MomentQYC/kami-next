@@ -1,19 +1,16 @@
-import type { Spring } from 'framer-motion'
+import type { SpringOptions } from 'framer-motion'
 
-export const reboundPreset: Spring = {
-  type: 'spring',
+export const reboundPreset: SpringOptions = {
   bounce: 10,
   stiffness: 140,
   damping: 8,
 }
 
-export const microdampingPreset: Spring = {
-  type: 'spring',
+export const microdampingPreset: SpringOptions = {
   damping: 24,
 }
 
-export const microReboundPreset: Spring = {
-  type: 'spring',
+export const microReboundPreset: SpringOptions = {
   stiffness: 300,
   damping: 20,
 }

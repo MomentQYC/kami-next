@@ -1,7 +1,7 @@
 import { clsx } from 'clsx'
 import type { MarkdownToJSX } from 'markdown-to-jsx'
 import { sanitizeUrl } from 'markdown-to-jsx'
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import {
   Fragment,
   createElement,
@@ -66,7 +66,10 @@ const CommentList: FC = memo(() => {
   )
 })
 
-const SingleComment: FC<{ id: string }> = ({ id, children }) => {
+const SingleComment: FC<PropsWithChildren<{ id: string }>> = ({
+  id,
+  children,
+}) => {
   const [replyId, setReplyId] = useState('')
 
   const {
@@ -83,7 +86,6 @@ const SingleComment: FC<{ id: string }> = ({ id, children }) => {
       name: state.master?.name || '',
       logged: state.isLogged,
     }),
-    shallow,
   )
 
   const { commentIdMap, comments } = useCommentCollection<{
@@ -94,7 +96,6 @@ const SingleComment: FC<{ id: string }> = ({ id, children }) => {
       commentIdMap: state.data,
       comments: state.comments,
     }),
-    shallow,
   )
 
   const commentCollection = useCommentCollection.getState()
@@ -171,7 +172,7 @@ const SingleComment: FC<{ id: string }> = ({ id, children }) => {
                   try {
                     setSure(null)
                     // eslint-disable-next-line no-empty
-                  } catch {}
+                  } catch { }
                 }, 8000)
               }}
             >
@@ -230,15 +231,13 @@ const SingleComment: FC<{ id: string }> = ({ id, children }) => {
       }
       content={
         <KamiMarkdown
-          value={`${
-            comment.parent
-              ? `@${
-                  commentIdMap.get(comment.parent as any as string)?.id ??
-                  (comment.parent as any as CommentModel)?.id ??
-                  ''
-                } `
-              : ''
-          }${comment.text}`}
+          value={`${comment.parent
+            ? `@${commentIdMap.get(comment.parent as any as string)?.id ??
+            (comment.parent as any as CommentModel)?.id ??
+            ''
+            } `
+            : ''
+            }${comment.text}`}
           forceBlock
           className={styles['comment']}
           disableParsingRawHTML

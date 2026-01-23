@@ -93,7 +93,30 @@ export default defineConfig({
           bg: 'var(--shizuku-background-color)',
         },
 
-        always: { ...defaultColors },
+        // always: { ...defaultColors },
+        always: (() => {
+          const descs = Object.getOwnPropertyDescriptors(defaultColors)
+          const clean = {}
+          const deprecated = [
+            'lightBlue',
+            'warmGray',
+            'trueGray',
+            'coolGray',
+            'blueGray',
+            'zink',
+          ]
+          for (const key in descs) {
+            if (deprecated.includes(key)) continue
+
+            const desc = descs[key]
+            if (desc.get) {
+              clean[key] = desc.get()
+            } else if ('value' in desc) {
+              clean[key] = desc.value
+            }
+          }
+          return clean
+        })(),
       },
     },
   },

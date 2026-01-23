@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { FC, PropsWithChildren } from 'react'
 import React, {
   memo,
   useCallback,
@@ -71,7 +71,7 @@ const useColorModeTransition = (isDark: boolean) => {
   }, [isDark])
 }
 
-export const SiteLayout: FC = memo(({ children }) => {
+export const SiteLayout: FC<PropsWithChildren> = memo(({ children }) => {
   const { toggle, value: isDark } = useDarkModeDetector()
 
   useThemeBackground()

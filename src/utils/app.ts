@@ -84,7 +84,7 @@ export async function fetchInitialData(): Promise<InitialDataType> {
   if (configSnippetState.status === 'fulfilled') {
     configSnippet = { ...configSnippetState.value }
   } else {
-    configSnippet = defaultConfigs as any
+    configSnippet = defaultConfigs as unknown as KamiConfig
   }
 
   // @ts-ignore

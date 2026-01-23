@@ -5,7 +5,7 @@ export function IF<K>(FC: FC<K>, condition: () => boolean): FC<K> {
   const FC$: FC<any> = (props) => {
     const truthy = condition()
 
-    return truthy ? <FC {...props} /> : (null as any)
+    return truthy ? <FC {...props} /> : null
   }
 
   return (props) => <FC$ {...props} />
