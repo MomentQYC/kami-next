@@ -48,7 +48,7 @@ export const FooterContent: FC = () => {
     <div className={styles.wrap}>
       <div className="left to-center">
         <p>
-          © {thisYear !== 2020 && '2020-'}
+          © {thisYear !== 2026 && '2026-'}
           {thisYear}{' '}
           <a href={kamiConfig.site.footer.homePage ?? '#'} target="_blank">
             {name}
@@ -61,18 +61,24 @@ export const FooterContent: FC = () => {
         <ImpressionView trackerMessage="底部曝光">
           <p className="children:flex-shrink-0 flex flex-wrap justify-center space-x-2">
             <span>Powered by </span>
-            <a href="https://github.com/mx-space" onClick={trackerToGithub}>
+            <a
+              href="https://github.com/mx-space"
+              onClick={trackerToGithub}
+              className="hover:underline"
+            >
               mx-space
             </a>
-            .
+            <span>.</span>
             <a
               href="https://github.com/mx-space/kami"
               onClick={trackerToGithub}
               title={version}
+              className="hover:underline"
             >
               Kami
             </a>
-            .
+            <span>.</span>
+            <span className="opacity-80">Maintained by Nanachan.</span>
             {icp.enable && !!icp.label && !!icp.link && (
               <div className="inline-block text-center">
                 <a href={icp.link} target="_blank" rel="noreferrer">

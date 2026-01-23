@@ -1,40 +1,38 @@
-# Rebuild the source code only when needed
-FROM node:20-alpine AS builder
+FROM node:24-alpine AS base
 
-RUN apk add --no-cache libc6-compat git
-RUN npm i -g pnpm
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
+
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm i --frozen-lockfile
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm install
-RUN npm run build
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# If using npm comment out above and use below instead
-# RUN npm run build
+RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
+RUN pnpm build
 
-# Production image, copy all the files and run next
-FROM node:20-alpine AS runner
+FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-ARG BASE_URL
-ENV BASE_URL=${BASE_URL}
-ENV NEXT_PUBLIC_API_URL=${BASE_URL}/api/v2
-ENV NEXT_PUBLIC_GATEWAY_URL=${BASE_URL}
-RUN node -e "console.log(process.env)"
-# Uncomment the following line in case you want to disable telemetry during runtime.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# You only need to copy next.config.mjs if you are NOT using the default configuration
-COPY --from=builder /app/next.config.mjs ./
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
 
-# Automatically leverage output traces to reduce image size 
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -42,6 +40,7 @@ USER nextjs
 
 EXPOSE 2323
 
-ENV PORT 2323
+ENV PORT=2323
+ENV HOSTNAME="0.0.0.0"
 
-CMD echo "Mix Space Web [Kami] Image." && node server.js
+CMD ["node", "server.js"]

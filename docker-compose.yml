@@ -1,0 +1,17 @@
+services:
+  kami-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kami-frontend
+    restart: always
+    ports:
+      - "2323:2323"
+    env_file:
+      - .env
+    networks:
+      - kami-network
+
+networks:
+  kami-network:
+    external: true

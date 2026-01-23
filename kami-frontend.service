@@ -1,0 +1,32 @@
+[Unit]
+Description=Kami Frontend Service
+After=network.target
+
+[Service]
+Type=simple
+# ==============================================================================
+# Configuration Section
+# ==============================================================================
+User=kami
+Group=kami
+WorkingDirectory=/path/to/kami-next
+# Load environment variables (API_URL, etc.)
+EnvironmentFile=/path/to/kami-next/.env
+# Next.js standalone entry point
+ExecStart=/usr/bin/node /path/to/kami-next/.next/standalone/server.js
+# ==============================================================================
+
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=kami-frontend
+
+# Hardened Security (Optional but Recommended)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target
