@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import React, { useCallback, useInsertionEffect, useRef } from 'react'
 import { message } from 'react-message-popup'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useAppStore } from '~/atoms/app'
 import { loadScript, loadStyleSheet } from '~/utils/load-script'
@@ -16,14 +16,11 @@ interface Props {
 export const HighLighter: FC<Props> = (props) => {
   const { lang: language, content: value } = props
 
-  const { colorMode, isPrintMode } = useAppStore<{
-    colorMode: string
-    isPrintMode: boolean
-  }>(
-    (state) => ({
+  const { colorMode, isPrintMode } = useAppStore(
+    useShallow((state) => ({
       colorMode: state.colorMode,
       isPrintMode: state.mediaType === 'print',
-    }),
+    })),
   )
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(value)

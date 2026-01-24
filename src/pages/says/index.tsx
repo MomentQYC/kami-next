@@ -1,29 +1,32 @@
 import type { MarkdownToJSX } from 'markdown-to-jsx'
 import Markdown from 'markdown-to-jsx'
 import randomColor from 'randomcolor'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import Masonry from 'react-masonry-css'
 
 import { useAppStore } from '~/atoms/app'
 import { useSayCollection } from '~/atoms/collections/say'
 import { Seo } from '~/components/app/Seo'
 import { BottomToUpTransitionView } from '~/components/ui/Transition/BottomToUpTransitionView'
-import { useSyncEffectOnce } from '~/hooks/common/use-sync-effect'
 import { hexToRGB } from '~/utils/color'
 import { relativeTimeFromNow } from '~/utils/time'
 
 import styles from './index.module.css'
 
 const SayView = () => {
-  useSyncEffectOnce(() => {
+  useEffect(() => {
     useSayCollection.getState().fetchAll()
-  })
+  }, [])
 
-  const sayList = useSayCollection((state) => state.data)
+  const sayIds = useSayCollection((state) => Array.from(state.data.keys()))
+  const sayData = useSayCollection.getState().data
 
-  const says = Array.from(sayList.values()).sort(
-    (b, a) => +new Date(a.created) - +new Date(b.created),
-  )
+  const says = useMemo(() => {
+    return sayIds
+      .map((id) => sayData.get(id)!)
+      .filter(Boolean)
+      .sort((b, a) => +new Date(a.created) - +new Date(b.created))
+  }, [sayIds])
 
   const colorMode = useAppStore((state) => state.colorMode)
   const colorsMap = useMemo(() => {

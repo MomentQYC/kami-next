@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 import { useAudio } from 'react-use'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import { useMusicStore, usePlayProgress } from '~/atoms/music'
 import { withNoSSR } from '~/components/app/HoC/no-ssr'
@@ -307,16 +307,12 @@ const changeOfPlayerHandler = throttle(
 )
 export const _MusicMiniPlayerStoreControlled = memo(() => {
   const ref = useRef<MusicPlayerRef>(null)
-  const { isPlay, isHide, playlist } = useMusicStore<{
-    isPlay: boolean
-    isHide: boolean
-    playlist: number[]
-  }>(
-    (state) => ({
+  const { isPlay, isHide, playlist } = useMusicStore(
+    useShallow((state) => ({
       isPlay: state.isPlay,
       isHide: state.isHide,
       playlist: state.list,
-    })
+    })),
   )
   const { event } = useAnalyze()
   useEffect(() => {

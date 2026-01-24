@@ -2,34 +2,31 @@ import { useAppStore } from '~/atoms/app'
 import { isClientSide } from '~/utils/env'
 
 export const useDetectPadOrMobile = () => {
-  return useAppStore((state) => {
-    const { pad, mobile } = state.viewport
-    return pad || mobile
-  })
+  const pad = useAppStore((state) => state.viewport.pad)
+  const mobile = useAppStore((state) => state.viewport.mobile)
+  return pad || mobile
 }
 
 export const useDetectIsNarrowThanLaptop = () => {
   const hpad = useAppStore((state) => state.viewport.hpad)
-
-  return useDetectPadOrMobile() || hpad
+  const padOrMobile = useDetectPadOrMobile()
+  return padOrMobile || hpad
 }
 
 export const useIsOverFirstScreenHeight = () => {
-  const position = useAppStore(({ position }) =>
-    !isClientSide()
-      ? false
-      : position > window.innerHeight || position > window.screen.height,
-  )
+  const position = useAppStore((state) => state.position)
+  const viewportH = useAppStore((state) => state.viewport.h)
 
-  return position
+  if (!isClientSide()) return false
+  const screenHeight = viewportH || window.innerHeight
+  return position > screenHeight
 }
 
 export const useIsOverPostTitleHeight = () => {
-  const position = useAppStore(({ position }) =>
-    !isClientSide()
-      ? false
-      : position > 126 || position > window.screen.height / 3,
-  )
+  const position = useAppStore((state) => state.position)
+  const viewportH = useAppStore((state) => state.viewport.h)
 
-  return position
+  if (!isClientSide()) return false
+  const threshold = Math.min(126, (viewportH || window.screen.height) / 3)
+  return position > threshold
 }

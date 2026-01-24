@@ -5,9 +5,7 @@ import { useCommentCollection } from '~/atoms/collections/comment'
 import { springScrollToElement } from '~/utils/spring'
 
 export const CommentAtRender: FC<{ id: string }> = memo(({ id: value }) => {
-  const commentIdMap = useCommentCollection((state) => state.data)
-
-  const comment = typeof value === 'string' ? commentIdMap.get(value) : value
+  const comment = useCommentCollection((state) => state.data.get(value))
 
   const onMouseOver: MouseEventHandler<HTMLAnchorElement> = useCallback(() => {
     if (comment?.id) {

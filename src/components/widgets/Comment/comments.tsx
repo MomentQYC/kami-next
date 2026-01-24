@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 import { message } from 'react-message-popup'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import type { CommentModel } from '@mx-space/api-client'
 
@@ -76,26 +76,19 @@ const SingleComment: FC<PropsWithChildren<{ id: string }>> = ({
     avatar: masterAvatar,
     name: masterName,
     logged,
-  } = useUserStore<{
-    avatar: string
-    name: string
-    logged: boolean
-  }>(
-    (state) => ({
+  } = useUserStore(
+    useShallow((state) => ({
       avatar: state.master?.avatar || '',
       name: state.master?.name || '',
       logged: state.isLogged,
-    }),
+    })),
   )
 
-  const { commentIdMap, comments } = useCommentCollection<{
-    commentIdMap: Map<Id, CommentModel>
-    comments: CommentModel[]
-  }>(
-    (state) => ({
+  const { commentIdMap, comments } = useCommentCollection(
+    useShallow((state) => ({
       commentIdMap: state.data,
       comments: state.comments,
-    }),
+    })),
   )
 
   const commentCollection = useCommentCollection.getState()
