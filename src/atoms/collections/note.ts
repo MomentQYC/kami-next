@@ -123,11 +123,6 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
         const storeLiked = state.likeIdList.has(id.toString())
 
         const inCookie = isLikedBefore(`note-${id.toString()}`)
-        if (!storeLiked && inCookie) {
-          setState((state) => {
-            state.likeIdList.add(id.toString())
-          })
-        }
 
         return storeLiked || inCookie
       },

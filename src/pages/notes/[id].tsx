@@ -134,6 +134,7 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
   const note = useNoteCollection((state) => state.get(props.id))
 
   const router = useRouter()
+  const isFetching = useRef(false)
 
   const nid = note?.nid
 
@@ -141,20 +142,23 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
     if (router.query.id === 'latest' && nid) {
       router.replace({
         pathname: `/notes/${nid}`,
-        query: { ...omit(router.query, ['id']) },
+        query: { ...omit(router.query, ['id'] as any) },
       })
     }
-  }, [nid])
+  }, [nid, router.query.id])
 
   useEffect(() => {
-    if (!note?.id) return
+    if (!note?.id || isFetching.current) return
     // FIXME: SSR 之后的 hydrate 没有同步数据
     if (!noteCollection.relationMap.has(note.id)) {
-      noteCollection.fetchById(note.nid, undefined, { force: true })
+      isFetching.current = true
+      noteCollection.fetchById(note.nid, undefined, { force: true }).finally(() => {
+        isFetching.current = false
+      })
     }
   }, [note?.id, note?.nid])
 
-  if (!note) return null
+  if (!note) return <Loading />
 
   useSetHeaderShare(note.title)
   useUpdateNote(note)
@@ -276,11 +280,13 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
       {!isSecret && (
         <Suspense>
           <ArticleLayout
+            // @ts-ignore
             className="!min-h-[unset] !pt-0"
             key={`comments-${props.id}`}
           >
             <Suspense>
               <CommentLazy
+                // @ts-ignore
                 id={id}
                 key={id}
                 allowComment={note.allowComment ?? true}
@@ -301,16 +307,16 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
   const router = useRouter()
 
   const noteIdInStore = useNoteCollection((state) => state.get(props.id)?.id)
-  const noteId = noteIdInStore || (('nid' in props) ? props.id : undefined)
+  const isLoaded = !!noteIdInStore
 
   useEffect(() => {
-    if (!noteIdInStore && !('needPassword' in props)) {
+    if (!isLoaded && !('needPassword' in props)) {
       noteCollection.add(props)
     }
-  }, [noteIdInStore, props])
+  }, [isLoaded, props])
 
   if ('needPassword' in props) {
-    if (!noteId) {
+    if (!isLoaded) {
       const fetchData = (password: string) => {
         const id = router.query.id as string
         noteCollection
@@ -321,15 +327,15 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
       }
       return <NotePasswordConfrim onSubmit={fetchData} />
     } else {
-      return <NoteView id={noteId} />
+      return <NoteView id={noteIdInStore} />
     }
   }
 
-  if (!noteId) {
+  if (!isLoaded && !('nid' in props)) {
     return <Loading />
   }
 
-  return <NoteView id={noteId} />
+  return <NoteView id={props.id} />
 }
 
 PP.getInitialProps = async (ctx) => {
