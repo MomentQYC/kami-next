@@ -138,7 +138,7 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (router.query.id === 'latest') {
+    if (router.query.id === 'latest' && note.nid) {
       router.replace({
         pathname: `/notes/${note.nid}`,
         query: { ...omit(router.query, ['id']) },
@@ -147,11 +147,12 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
   }, [note.nid])
 
   useEffect(() => {
+    if (!note.id) return
     // FIXME: SSR 之后的 hydrate 没有同步数据
-    if (!noteCollection.relationMap.has(props.id)) {
+    if (!noteCollection.relationMap.has(note.id)) {
       noteCollection.fetchById(note.nid, undefined, { force: true })
     }
-  }, [note.nid])
+  }, [note.id, note.nid])
 
   useSetHeaderShare(note.title)
   useUpdateNote(note)
@@ -299,11 +300,14 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
 
   const noteId = useNoteCollection((state) => state.get(props.id)?.id)
 
+  const propsId = props.id
+  const modelId = 'nid' in props ? props.id : undefined
+
   useEffect(() => {
     if (!noteId && !('needPassword' in props)) {
       noteCollection.add(props)
     }
-  }, [noteId, props])
+  }, [noteId, modelId, propsId])
 
   if ('needPassword' in props) {
     if (!noteId) {
@@ -325,7 +329,7 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
     return <Loading />
   }
 
-  return <NoteView id={props.id} />
+  return <NoteView id={noteId} />
 }
 
 PP.getInitialProps = async (ctx) => {

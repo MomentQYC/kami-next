@@ -28,7 +28,7 @@ type Setter<
     | Partial<BaseStore<T> & A>
     | ((state: BaseStore<T> & A) => Partial<BaseStore<T> & A> | void),
   replace?: boolean,
-) => any
+) => void
 
 // TODO ssr hydrate
 export const createCollection = <T extends { id: Id }, A extends object>(
@@ -45,8 +45,6 @@ export const createCollection = <T extends { id: Id }, A extends object>(
       subscribeWithSelector<BaseStore<T> & A>((set: Setter<T, A>, get) => ({
         data,
 
-        ...(typeof actions === 'function' ? actions(set, get) : actions),
-
         softDelete(key) {
           const data = get().data.get(key)
           if (!data) {
@@ -60,7 +58,7 @@ export const createCollection = <T extends { id: Id }, A extends object>(
 
           return true
         },
-        add(...args: any[]) {
+        add(...args: [T | T[]] | [string, T | T[]]) {
           const addFn = get().add
 
           const add = (id: string, data: T | T[]) => {
@@ -73,17 +71,19 @@ export const createCollection = <T extends { id: Id }, A extends object>(
             }
 
             set((state) => {
-              state.data.set(id, { ...data })
+              state.data.set(id, { ...data } as ModelWithDeleted<T>)
             })
           }
 
-          if (typeof args[0] === 'string') {
+          if (args.length === 2 && typeof args[0] === 'string') {
             const id = args[0]
             const data = args[1]
             add(id, data)
-          } else {
+          } else if (args.length === 1 && !Array.isArray(args[0])) {
             const data = args[0]
             add(data.id, data)
+          } else if (args.length === 1 && Array.isArray(args[0])) {
+            add('', args[0])
           }
         },
         addOrPatch(data: T | T[]) {
@@ -99,9 +99,9 @@ export const createCollection = <T extends { id: Id }, A extends object>(
             if (collection.has(data.id)) {
               const exist = collection.get(data.id)
 
-              collection.set(data.id, { ...exist, ...data })
+              collection.set(data.id, { ...exist, ...data } as ModelWithDeleted<T>)
             } else {
-              collection.set(data.id, data)
+              collection.set(data.id, data as ModelWithDeleted<T>)
             }
           })
         },
@@ -110,6 +110,8 @@ export const createCollection = <T extends { id: Id }, A extends object>(
             state.data.delete(id)
           })
         },
+
+        ...(typeof actions === 'function' ? actions(set, get) : actions),
       })),
     ),
     // {

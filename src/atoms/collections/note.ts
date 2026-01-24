@@ -30,6 +30,8 @@ interface NoteCollection {
   >
   fetchLatest(): Promise<ModelWithLiked<NoteModel>>
   bookmark(id: string): Promise<void>
+  add(data: NoteModel | NoteModel[]): void
+  addOrPatch(data: NoteModel | NoteModel[]): void
 }
 
 export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
@@ -182,6 +184,51 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
               getState().addOrPatch(nextNote)
             })
           }
+        })
+      },
+
+      add(data: NoteModel | NoteModel[]) {
+        const notes = Array.isArray(data) ? data : [data]
+        setState((state) => {
+          notes.forEach((note) => {
+            state.data.set(note.id, note)
+            state.nidToIdMap.set(note.nid, note.id)
+            if (
+              'prev' in note &&
+              'next' in note &&
+              note.prev &&
+              note.next
+            ) {
+              state.relationMap.set(note.id, [
+                note.prev as Partial<NoteModel>,
+                note.next as Partial<NoteModel>,
+              ])
+            }
+          })
+        })
+      },
+
+      addOrPatch(data: NoteModel | NoteModel[]) {
+        const notes = Array.isArray(data) ? data : [data]
+        setState((state) => {
+          notes.forEach((note) => {
+            const exist = state.data.get(note.id)
+            const nextNote = exist ? ({ ...exist, ...note } as NoteModel) : note
+            state.data.set(note.id, nextNote)
+            state.nidToIdMap.set(nextNote.nid, nextNote.id)
+
+            if (
+              'prev' in note &&
+              'next' in note &&
+              note.prev &&
+              note.next
+            ) {
+              state.relationMap.set(note.id, [
+                note.prev as Partial<NoteModel>,
+                note.next as Partial<NoteModel>,
+              ])
+            }
+          })
         })
       },
     }
