@@ -299,12 +299,11 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
 
   const noteId = useNoteCollection((state) => state.get(props.id)?.id)
 
-  const update = useUpdate()
   useEffect(() => {
-    if (!noteId) {
-      update()
+    if (!noteId && !('needPassword' in props)) {
+      noteCollection.add(props)
     }
-  }, [noteId])
+  }, [noteId, props])
 
   if ('needPassword' in props) {
     if (!noteId) {
@@ -315,9 +314,6 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
           .catch(() => {
             message.error('密码错误')
           })
-          .then(() => {
-            update()
-          })
       }
       return <NotePasswordConfrim onSubmit={fetchData} />
     } else {
@@ -326,8 +322,6 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
   }
 
   if (!noteId) {
-    noteCollection.add(props)
-
     return <Loading />
   }
 

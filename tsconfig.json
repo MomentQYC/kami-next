@@ -39,6 +39,7 @@
     }
   },
   "exclude": [
+    "node_modules",
     ".next",
     "server/**/*.*",
     "node_modules/.pnpm/@mx-space+api-client@*/node_modules/@mx-space/api-client/**/*.ts"

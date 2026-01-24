@@ -253,3 +253,18 @@ index 3e07b11ec53fdd03be8e33952ea119c46c454629..833e0fc8fda2051593d756ea23254cf9
  Object.defineProperty(message$, 'warning', {
    get() {
      return message$.warn
+diff --git a/tsconfig.json b/tsconfig.json
+index 1c2ff1e2ee1e2ea5a9ee853edded8aad683fa29d..6e874fef39e3248ef8a63067788a5baa27e12811 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -6,8 +6,8 @@
+       "DOM",
+       "DOM.Iterable"
+     ],
+-    "module": "NodeNext",
+-    "moduleResolution": "node",
++    "module": "nodenext",
++    "moduleResolution": "nodenext",
+     "strict": true,
+     "jsx": "react",
+     "resolveJsonModule": true,

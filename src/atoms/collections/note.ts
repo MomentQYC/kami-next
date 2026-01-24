@@ -54,7 +54,13 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
       likeIdList,
       get(id: string | number) {
         if (typeof id === 'string') {
-          return getCollection().get(id)
+          const res = getCollection().get(id)
+          if (res) return res
+          if (!isNaN(+id)) {
+            const realId = getState().nidToIdMap.get(+id)
+            return realId ? getCollection().get(realId) : undefined
+          }
+          return undefined
         } else {
           const realId = getState().nidToIdMap.get(id)
           return realId ? getCollection().get(realId) : undefined
