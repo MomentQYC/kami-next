@@ -4,7 +4,7 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 
 COPY package.json pnpm-lock.yaml* ./
 COPY patches ./patches
@@ -17,7 +17,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.28.1 --activate
 RUN pnpm build
 
 FROM base AS runner

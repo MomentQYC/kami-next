@@ -1,0 +1,255 @@
+diff --git a/dist/src/utils/index.js b/dist/src/utils/index.js
+index 3b8cd8e96b3466fd07e0130d9cbe43e8f9b8a8d5..5c281eca61c302430b2d47d7fa057b93377777b7 100644
+--- a/dist/src/utils/index.js
++++ b/dist/src/utils/index.js
+@@ -53,8 +53,8 @@ const getContainerNode = () => {
+ // @ts-ignore
+ const message$ = {};
+ ['success', 'error', 'warn', 'info', 'loading'].forEach((type) => {
+-    const is18 = version.startsWith('18');
+-    if (!is18) {
++    const majorVersion = parseInt(version.split('.')[0]);
++    if (majorVersion < 18) {
+         throw new TypeError('react version low than 18 is not supported');
+     }
+     message$[type] = (content, duration = 2500) => {
+@@ -89,9 +89,11 @@ const message$ = {};
+                 let ins = null;
+                 if (containerRoot) {
+                     root = createRoot(fragment);
+-                    root.render(React.createElement(Message, { type: type, duration: realDuration, message: message, getInstance: ($) => {
++                    root.render(React.createElement(Message, {
++                        type: type, duration: realDuration, message: message, getInstance: ($) => {
+                             ins = $;
+-                        } }));
++                        }
++                    }));
+                 }
+                 let isDestroyed = false;
+                 const destory = () => {
+diff --git a/src/utils/index.tsx b/src/utils/index.tsx
+index 3e07b11ec53fdd03be8e33952ea119c46c454629..833e0fc8fda2051593d756ea23254cf99a5c5f50 100644
+--- a/src/utils/index.tsx
++++ b/src/utils/index.tsx
+@@ -66,121 +66,121 @@ const getContainerNode: () => Promise<[HTMLElement, Root | null]> = () => {
+ // @ts-ignore
+ 
+ const message$: MessageInstance = {}
+-;(['success', 'error', 'warn', 'info', 'loading'] as const).forEach((type) => {
+-  const is18 = version.startsWith('18')
+-  if (!is18) {
+-    throw new TypeError('react version low than 18 is not supported')
+-  }
+-
+-  message$[type] = (content, duration = 2500) => {
+-    return new Promise<MessageReturnType>((resolve) => {
+-      if (isServerSide()) {
+-        return {
+-          // mock ssr server
+-          destory() {
+-            return true
+-          },
+-        }
+-      }
++  ; (['success', 'error', 'warn', 'info', 'loading'] as const).forEach((type) => {
++    const majorVersion = parseInt(version.split('.')[0])
++    if (majorVersion < 18) {
++      throw new TypeError('react version low than 18 is not supported')
++    }
+ 
+-      requestAnimationFrame(async () => {
+-        let message: string
+-        const configDuration =
+-          typeof content === 'string' ? duration : content.duration ?? duration
+-        const realDuration =
+-          typeof configDuration === 'function'
+-            ? configDuration()
+-            : configDuration
+-        if (typeof content === 'string') {
+-          message = content
+-        } else {
+-          message = content.content
+-        }
+-        if (!message) {
+-          throw new Error('message content is required')
+-        }
+-        const [container, containerRoot] = await getContainerNode()
+-
+-        const fragment = document.createElement('div')
+-
+-        let root: Root | null = null
+-        let ins: MessageInstanceRef | null = null
+-
+-        if (containerRoot) {
+-          root = createRoot(fragment)
+-
+-          root.render(
+-            <Message
+-              type={type}
+-              duration={realDuration}
+-              message={message}
+-              getInstance={($) => {
+-                ins = $
+-              }}
+-            />,
+-          )
++    message$[type] = (content, duration = 2500) => {
++      return new Promise<MessageReturnType>((resolve) => {
++        if (isServerSide()) {
++          return {
++            // mock ssr server
++            destory() {
++              return true
++            },
++          }
+         }
+-        let isDestroyed = false
+-        const destory = () => {
+-          if (isDestroyed) {
+-            return false
++
++        requestAnimationFrame(async () => {
++          let message: string
++          const configDuration =
++            typeof content === 'string' ? duration : content.duration ?? duration
++          const realDuration =
++            typeof configDuration === 'function'
++              ? configDuration()
++              : configDuration
++          if (typeof content === 'string') {
++            message = content
++          } else {
++            message = content.content
++          }
++          if (!message) {
++            throw new Error('message content is required')
+           }
++          const [container, containerRoot] = await getContainerNode()
++
++          const fragment = document.createElement('div')
++
++          let root: Root | null = null
++          let ins: MessageInstanceRef | null = null
++
++          if (containerRoot) {
++            root = createRoot(fragment)
++
++            root.render(
++              <Message
++                type={type}
++                duration={realDuration}
++                message={message}
++                getInstance={($) => {
++                  ins = $
++                }}
++              />,
++            )
++          }
++          let isDestroyed = false
++          const destory = () => {
++            if (isDestroyed) {
++              return false
++            }
+ 
+-          root?.unmount()
++            root?.unmount()
+ 
+-          requestAnimationFrame(() => {
+-            fragment.remove()
+-          })
++            requestAnimationFrame(() => {
++              fragment.remove()
++            })
+ 
+-          isDestroyed = true
+-          return true
+-        }
++            isDestroyed = true
++            return true
++          }
+ 
+-        const setTimer = () => {
+-          return setTimeout(() => {
+-            destory()
+-            // 加 500ms 动画时间
+-          }, realDuration + 500)
+-        }
++          const setTimer = () => {
++            return setTimeout(() => {
++              destory()
++              // 加 500ms 动画时间
++            }, realDuration + 500)
++          }
+ 
+-        let timerId: ReturnType<typeof setTimeout> | null = null
+-        // because Infinity is 0 in timer
+-        if (realDuration !== Infinity) {
+-          timerId = setTimer()
+-        }
++          let timerId: ReturnType<typeof setTimeout> | null = null
++          // because Infinity is 0 in timer
++          if (realDuration !== Infinity) {
++            timerId = setTimer()
++          }
+ 
+-        requestAnimationFrame(() => {
+-          container.appendChild(fragment)
+-        })
++          requestAnimationFrame(() => {
++            container.appendChild(fragment)
++          })
+ 
+-        const getInstance = () => {
+-          return new Promise<MessageInstanceRef>((resolve) => {
+-            requestAnimationFrame(() => {
+-              resolve(ins!)
++          const getInstance = () => {
++            return new Promise<MessageInstanceRef>((resolve) => {
++              requestAnimationFrame(() => {
++                resolve(ins!)
++              })
+             })
+-          })
+-        }
++          }
+ 
+-        resolve({
+-          destory,
+-          next(content: string, newType?: MessageType) {
+-            if (timerId) {
+-              clearTimeout(timerId)
+-            }
+-            getInstance().then((ins) => {
+-              if (ins.isMount()) {
+-                ins.next(content, newType)
+-                timerId = setTimer()
+-              } else {
+-                message$[newType || type](content, realDuration)
++          resolve({
++            destory,
++            next(content: string, newType?: MessageType) {
++              if (timerId) {
++                clearTimeout(timerId)
+               }
+-            })
+-          },
++              getInstance().then((ins) => {
++                if (ins.isMount()) {
++                  ins.next(content, newType)
++                  timerId = setTimer()
++                } else {
++                  message$[newType || type](content, realDuration)
++                }
++              })
++            },
++          })
+         })
+       })
+-    })
+-  }
+-})
++    }
++  })
+ Object.defineProperty(message$, 'warning', {
+   get() {
+     return message$.warn

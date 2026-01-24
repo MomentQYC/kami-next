@@ -10,7 +10,7 @@ overrides:
 
 patchedDependencies:
   '@mx-space/api-client@1.18.1':
-    hash: o63mfaowxzgcxsvwtej26iyzxe
+    hash: 779158d8910f01c1ca2fc74b73946ad6c9f2912bccf0f4435a2f81dd680260a3
     path: patches/@mx-space__api-client@1.18.1.patch
 
 importers:
@@ -25,7 +25,7 @@ importers:
         version: 0.9.0
       '@mx-space/api-client':
         specifier: 1.18.1
-        version: 1.18.1(patch_hash=o63mfaowxzgcxsvwtej26iyzxe)
+        version: 1.18.1(patch_hash=779158d8910f01c1ca2fc74b73946ad6c9f2912bccf0f4435a2f81dd680260a3)
       '@sentry/nextjs':
         specifier: 10.36.0
         version: 10.36.0(@opentelemetry/context-async-hooks@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.5.0(@opentelemetry/api@1.9.0))(next@16.1.4(@babel/core@7.22.9)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)(webpack@5.88.2)
@@ -6080,7 +6080,7 @@ snapshots:
     dependencies:
       langium: 3.3.1
 
-  '@mx-space/api-client@1.18.1(patch_hash=o63mfaowxzgcxsvwtej26iyzxe)': {}
+  '@mx-space/api-client@1.18.1(patch_hash=779158d8910f01c1ca2fc74b73946ad6c9f2912bccf0f4435a2f81dd680260a3)': {}
 
   '@next/bundle-analyzer@16.1.4':
     dependencies:
