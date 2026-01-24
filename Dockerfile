@@ -7,6 +7,7 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@9.4.0 --activate
 
 COPY package.json pnpm-lock.yaml* ./
+COPY patches ./patches
 RUN pnpm i --frozen-lockfile
 
 FROM base AS builder

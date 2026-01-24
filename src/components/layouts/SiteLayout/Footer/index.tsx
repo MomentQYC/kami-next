@@ -64,7 +64,6 @@ export const FooterContent: FC = () => {
             <a
               href="https://github.com/mx-space"
               onClick={trackerToGithub}
-              className="hover:underline"
             >
               mx-space
             </a>
@@ -73,7 +72,6 @@ export const FooterContent: FC = () => {
               href="https://github.com/mx-space/kami"
               onClick={trackerToGithub}
               title={version}
-              className="hover:underline"
             >
               Kami
             </a>
