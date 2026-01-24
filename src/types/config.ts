@@ -65,6 +65,7 @@ interface Site {
   favicon: string
   subtitle?: string | null
   logoSvg?: string
+  splashScreenLogo?: string
   figure?: string[]
   header: Header
   social: Social[]

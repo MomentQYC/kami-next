@@ -4,6 +4,7 @@ export const defaultConfigs = {
   site: {
     favicon: '/favicon.svg',
     logoSvg: null,
+    splashScreenLogo: null,
     figure: null,
     subtitle: null,
     background: {
