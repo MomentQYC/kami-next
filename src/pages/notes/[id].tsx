@@ -131,28 +131,30 @@ const useUpdateNote = (note: ModelWithDeleted<NoteModel>) => {
 }
 
 const NoteView: React.FC<{ id: string }> = memo((props) => {
-  const note = useNoteCollection(
-    (state) => state.get(props.id) || (noop as NoteModel),
-  )
+  const note = useNoteCollection((state) => state.get(props.id))
 
   const router = useRouter()
 
+  const nid = note?.nid
+
   useEffect(() => {
-    if (router.query.id === 'latest' && note.nid) {
+    if (router.query.id === 'latest' && nid) {
       router.replace({
-        pathname: `/notes/${note.nid}`,
+        pathname: `/notes/${nid}`,
         query: { ...omit(router.query, ['id']) },
       })
     }
-  }, [note.nid])
+  }, [nid])
 
   useEffect(() => {
-    if (!note.id) return
+    if (!note?.id) return
     // FIXME: SSR 之后的 hydrate 没有同步数据
     if (!noteCollection.relationMap.has(note.id)) {
       noteCollection.fetchById(note.nid, undefined, { force: true })
     }
-  }, [note.id, note.nid])
+  }, [note?.id, note?.nid])
+
+  if (!note) return null
 
   useSetHeaderShare(note.title)
   useUpdateNote(note)
@@ -298,16 +300,14 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
 ) => {
   const router = useRouter()
 
-  const noteId = useNoteCollection((state) => state.get(props.id)?.id)
-
-  const propsId = props.id
-  const modelId = 'nid' in props ? props.id : undefined
+  const noteIdInStore = useNoteCollection((state) => state.get(props.id)?.id)
+  const noteId = noteIdInStore || (('nid' in props) ? props.id : undefined)
 
   useEffect(() => {
-    if (!noteId && !('needPassword' in props)) {
+    if (!noteIdInStore && !('needPassword' in props)) {
       noteCollection.add(props)
     }
-  }, [noteId, modelId, propsId])
+  }, [noteIdInStore, props])
 
   if ('needPassword' in props) {
     if (!noteId) {
