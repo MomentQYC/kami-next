@@ -14,4 +14,4 @@ services:
 
 networks:
   kami-network:
-    external: true
+    driver: bridge
