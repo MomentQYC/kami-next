@@ -129,13 +129,13 @@ const PageView: PageOnlyProps = (props) => {
 
 const NextPageView: NextPage<PageModel> = (props) => {
   const { id } = props
-  const pageId = usePageCollection((state) => state.data.get(id)?.id)
+  const pageId = usePageCollection(useShallow((state) => state.data.get(id)?.id))
 
   useEffect(() => {
     if (!pageId) {
       usePageCollection.getState().add(props)
     }
-  }, [id, pageId, props])
+  }, [id, pageId, props.id])
 
   if (!pageId) {
     return <Loading />

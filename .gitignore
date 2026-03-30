@@ -7,6 +7,7 @@ node_modules/
 # typescript build output
 dist
 .env
+.env.local
 
 # pwa
 sw.js

@@ -3,6 +3,8 @@ import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
 
+import { isEqualObject } from '~/utils/_'
+
 type Id = string
 
 enableMapSet()
@@ -70,6 +72,11 @@ export const createCollection = <T extends { id: Id }, A extends object>(
               return
             }
 
+            const exist = get().data.get(id)
+            if (exist && isEqualObject(exist, data)) {
+              return
+            }
+
             set((state) => {
               state.data.set(id, { ...data } as ModelWithDeleted<T>)
             })
@@ -83,7 +90,8 @@ export const createCollection = <T extends { id: Id }, A extends object>(
             const data = args[0]
             add(data.id, data)
           } else if (args.length === 1 && Array.isArray(args[0])) {
-            add('', args[0])
+            const data = args[0]
+            add('', data)
           }
         },
         addOrPatch(data: T | T[]) {

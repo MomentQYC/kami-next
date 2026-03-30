@@ -36,11 +36,9 @@ export const uniqWith = <T>(arr: T[], comparator: (a: T, b: T) => boolean) =>
     return hasSame ? acc : [...acc, cur]
   }, [])
 
-export const isEqualObject = (a: unknown, b: unknown): boolean => {
-  if (typeof a !== 'object' || typeof b !== 'object') {
-    return false
-  }
-  if (a === null || b === null) {
+export const isEqualObject = (a: any, b: any): boolean => {
+  if (a === b) return true
+  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
     return false
   }
   const aKeys = Object.keys(a)

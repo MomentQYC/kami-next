@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import React, { lazy, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { message } from 'react-message-popup'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import type { PostModel } from '@mx-space/api-client'
 
@@ -115,20 +115,22 @@ const useUpdatePost = (post: ModelWithDeleted<PostModel>) => {
 }
 
 const Seo$: FC<{ id: string }> = ({ id }) => {
-  const post = usePostCollection((state) => {
-    const item = state.data.get(id)!
-    return {
-      title: item.title,
-      summary: item.summary,
-      category: item.category,
-      created: item.created,
-      modified: item.modified,
-      tags: item.tags,
-      text: item.text,
-      images: item.images,
-      meta: item.meta,
-    }
-  })
+  const post = usePostCollection(
+    useShallow((state) => {
+      const item = state.data.get(id)!
+      return {
+        title: item.title,
+        summary: item.summary,
+        category: item.category,
+        created: item.created,
+        modified: item.modified,
+        tags: item.tags,
+        text: item.text,
+        images: item.images,
+        meta: item.meta,
+      }
+    }),
+  )
   const {
     title,
     summary,
@@ -164,7 +166,7 @@ const FooterActionBar: FC<{ id: string }> = ({ id }) => {
   const [actions, setActions] = useState<ActionProps>({})
 
   const post = usePostCollection(
-    (state) => state.data.get(id) || (noop as PostModel),
+    useShallow((state) => state.data.get(id) || (noop as PostModel)),
   )
 
   const themeConfig = useThemeConfig()
@@ -240,12 +242,11 @@ const FooterActionBar: FC<{ id: string }> = ({ id }) => {
     post.id,
     post.category.name,
     post.copyright,
-    post.count.read,
+    post.count?.read,
     post.tags,
     donateConfig.enable,
     donateConfig.link,
-    post.count.like,
-    post.count,
+    post.count?.like,
     createTime,
     post.category.slug,
   ])
@@ -258,7 +259,7 @@ const FooterActionBar: FC<{ id: string }> = ({ id }) => {
 }
 
 const PostUpdateObserver: FC<{ id: string }> = memo(({ id }) => {
-  const post = usePostCollection((state) => state.data.get(id))
+  const post = usePostCollection(useShallow((state) => state.data.get(id)))
   useUpdatePost(post!)
   return null
 })
@@ -266,21 +267,23 @@ const PostUpdateObserver: FC<{ id: string }> = memo(({ id }) => {
 PostUpdateObserver.displayName = 'PostUpdateObserver'
 
 export const PostView: PageOnlyProps = (props) => {
-  const post = usePostCollection((state) => {
-    const item = state.data.get(props.id)!
-    return {
-      title: item.title,
-      category: item.category,
-      id: item.id,
-      images: item.images,
-      summary: item.summary,
-      created: item.created,
-      modified: item.modified,
-      text: item.text,
-      copyright: item.copyright,
-      allowComment: item.allowComment,
-    }
-  })
+  const post = usePostCollection(
+    useShallow((state) => {
+      const item = state.data.get(props.id)!
+      return {
+        title: item.title,
+        category: item.category,
+        id: item.id,
+        images: item.images,
+        summary: item.summary,
+        created: item.created,
+        modified: item.modified,
+        text: item.text,
+        copyright: item.copyright,
+        allowComment: item.allowComment,
+      }
+    }),
+  )
 
   const {
     url: { webUrl },
@@ -367,7 +370,7 @@ const NextPostView: NextPage<PostModel> = (props) => {
     if (!postId) {
       usePostCollection.getState().add(props)
     }
-  }, [id, postId, props])
+  }, [id, postId, props.id])
 
   if (!postId) {
     return <Loading />

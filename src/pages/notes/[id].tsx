@@ -16,7 +16,8 @@ import useUpdate from 'react-use/lib/useUpdate'
 import type { NoteModel } from '@mx-space/api-client'
 import { RequestError } from '@mx-space/api-client'
 
-import { noteCollection, useNoteCollection } from '~/atoms/collections/note'
+import { useNoteCollection } from '~/atoms/collections/note'
+import { useShallow } from 'zustand/shallow'
 import type { ModelWithDeleted } from '~/atoms/collections/utils/base'
 import { useIsLogged, useUserStore } from '~/atoms/user'
 import { Suspense } from '~/components/app/Suspense'
@@ -131,7 +132,7 @@ const useUpdateNote = (note: ModelWithDeleted<NoteModel>) => {
 }
 
 const NoteView: React.FC<{ id: string }> = memo((props) => {
-  const note = useNoteCollection((state) => state.get(props.id))
+  const note = useNoteCollection(useShallow((state) => state.get(props.id)))
 
   const router = useRouter()
   const isFetching = useRef(false)
@@ -307,20 +308,22 @@ const PP: NextPage<NoteModel | { needPassword: true; id: string }> = (
 ) => {
   const router = useRouter()
 
-  const noteIdInStore = useNoteCollection((state) => state.get(props.id)?.id)
+  const noteIdInStore = useNoteCollection(
+    useShallow((state) => state.get(props.id)?.id),
+  )
   const isLoaded = !!noteIdInStore
 
   useEffect(() => {
     if (!isLoaded && !('needPassword' in props)) {
-      noteCollection.add(props)
+      useNoteCollection.getState().add(props)
     }
-  }, [isLoaded, props])
+  }, [isLoaded, props.id])
 
   if ('needPassword' in props) {
     if (!isLoaded) {
       const fetchData = (password: string) => {
         const id = router.query.id as string
-        noteCollection
+        useNoteCollection.getState()
           .fetchById(isNaN(+id) ? id : +id, password)
           .catch(() => {
             message.error('密码错误')
@@ -343,10 +346,10 @@ PP.getInitialProps = async (ctx) => {
   const id = ctx.query.id as string
   const password = ctx.query.password as string
   if (id == 'latest') {
-    return (await noteCollection.fetchLatest()) as NoteModel
+    return (await useNoteCollection.getState().fetchLatest()) as NoteModel
   }
   try {
-    const res = await noteCollection.fetchById(
+    const res = await useNoteCollection.getState().fetchById(
       isNaN(+id) ? id : +id,
       password ? String(password) : undefined,
       { force: true },
