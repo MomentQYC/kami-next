@@ -46,6 +46,8 @@ const Prepare = () => {
   const initialData: AggregateRoot | null = useInitialData()
 
   useEffect(() => {
+    if (!initialData) return
+
     try {
       const { user } = initialData
       checkLogin()
@@ -60,7 +62,7 @@ const Prepare = () => {
 
     checkBrowser()
     printToConsole()
-  }, [])
+  }, [checkBrowser, checkLogin, initialData])
   return null
 }
 const App: FC<DataModel & { Component: any; pageProps: any; err: any }> = (
