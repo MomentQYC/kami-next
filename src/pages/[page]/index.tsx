@@ -9,7 +9,7 @@ import React, {
   useRef,
 } from 'react'
 import RemoveMarkdown from 'remove-markdown'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import type { PageModel } from '@mx-space/api-client'
 

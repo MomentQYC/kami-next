@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 import { message } from 'react-message-popup'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import type { CommentModel } from '@mx-space/api-client'
 

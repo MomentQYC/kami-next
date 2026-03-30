@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 import { title } from 'process'
 import type { FC } from 'react'
 import { useEffect } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import type { NoteModel, PageModel, PostModel } from '@mx-space/api-client'
 import { simpleCamelcaseKeys } from '@mx-space/api-client'

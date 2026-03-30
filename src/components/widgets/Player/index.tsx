@@ -12,7 +12,7 @@ import {
   useState,
 } from 'react'
 import { useAudio } from 'react-use'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useMusicStore, usePlayProgress } from '~/atoms/music'
 import { withNoSSR } from '~/components/app/HoC/no-ssr'

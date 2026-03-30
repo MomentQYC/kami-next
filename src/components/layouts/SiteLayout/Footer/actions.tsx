@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import type { FC, PropsWithChildren } from 'react'
 import React, { useCallback, useDeferredValue, useMemo } from 'react'
 import { Modifier, useShortcut } from 'react-shortcut-guide'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useActionStore } from '~/atoms/action'
 import { useAppStore } from '~/atoms/app'

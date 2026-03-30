@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import React, { useCallback, useInsertionEffect, useRef } from 'react'
 import { message } from 'react-message-popup'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useAppStore } from '~/atoms/app'
 import { loadScript, loadStyleSheet } from '~/utils/load-script'

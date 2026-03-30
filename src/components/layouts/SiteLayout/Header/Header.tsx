@@ -2,7 +2,7 @@ import classNames from 'clsx'
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useAppStore } from '~/atoms/app'
 import { useIsLogged } from '~/atoms/user'

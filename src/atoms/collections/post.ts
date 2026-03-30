@@ -13,16 +13,14 @@ interface IPostCollection {
 }
 export const usePostCollection = createCollection<PostModel, IPostCollection>(
   'post',
-  (setState) => {
+  (setState, getState) => {
     return {
       async fetchBySlug(category, slug) {
         const data = await apiClient.post.getPost(
           category,
           encodeURIComponent(slug),
         )
-        setState((state) => {
-          state.data.set(data.id, data)
-        })
+        getState().add(data)
         return data
       },
       up(id: string) {

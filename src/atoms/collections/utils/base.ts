@@ -61,57 +61,60 @@ export const createCollection = <T extends { id: Id }, A extends object>(
           return true
         },
         add(...args: [T | T[]] | [string, T | T[]]) {
-          const addFn = get().add
+          const currentData = get().data
+          const toAdd = new Map<string, ModelWithDeleted<T>>()
 
-          const add = (id: string, data: T | T[]) => {
-            if (Array.isArray(data)) {
-              data.forEach((d) => {
-                addFn(d)
-              })
-
-              return
+          const processItem = (id: string, item: T) => {
+            const exist = currentData.get(id)
+            if (!exist || !isEqualObject(exist, item)) {
+              toAdd.set(id, { ...item } as ModelWithDeleted<T>)
             }
-
-            const exist = get().data.get(id)
-            if (exist && isEqualObject(exist, data)) {
-              return
-            }
-
-            set((state) => {
-              state.data.set(id, { ...data } as ModelWithDeleted<T>)
-            })
           }
 
           if (args.length === 2 && typeof args[0] === 'string') {
-            const id = args[0]
-            const data = args[1]
-            add(id, data)
-          } else if (args.length === 1 && !Array.isArray(args[0])) {
+            processItem(args[0], args[1] as T)
+          } else if (args.length === 1) {
             const data = args[0]
-            add(data.id, data)
-          } else if (args.length === 1 && Array.isArray(args[0])) {
-            const data = args[0]
-            add('', data)
+            if (Array.isArray(data)) {
+              data.forEach((item) => processItem((item as T).id, item as T))
+            } else {
+              const item = data as T
+              processItem(item.id, item)
+            }
+          }
+
+          if (toAdd.size > 0) {
+            set((state) => {
+              for (const [id, item] of toAdd) {
+                state.data.set(id, item)
+              }
+            })
           }
         },
         addOrPatch(data: T | T[]) {
-          if (Array.isArray(data)) {
-            const patch = get().addOrPatch
-            data.forEach((d) => {
-              patch(d)
-            })
-            return
-          }
-          set((state) => {
-            const collection = state.data
-            if (collection.has(data.id)) {
-              const exist = collection.get(data.id)
+          const currentData = get().data
+          const items = Array.isArray(data) ? data : [data]
+          const toUpdate = new Map<string, ModelWithDeleted<T>>()
 
-              collection.set(data.id, { ...exist, ...data } as ModelWithDeleted<T>)
+          items.forEach((item) => {
+            const exist = currentData.get(item.id)
+            if (!exist) {
+              toUpdate.set(item.id, { ...item } as ModelWithDeleted<T>)
             } else {
-              collection.set(data.id, data as ModelWithDeleted<T>)
+              const next = { ...exist, ...item }
+              if (!isEqualObject(exist, next)) {
+                toUpdate.set(item.id, next as ModelWithDeleted<T>)
+              }
             }
           })
+
+          if (toUpdate.size > 0) {
+            set((state) => {
+              for (const [id, item] of toUpdate) {
+                state.data.set(id, item)
+              }
+            })
+          }
         },
         remove(id: Id) {
           set((state) => {

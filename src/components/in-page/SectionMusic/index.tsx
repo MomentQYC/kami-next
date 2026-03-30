@@ -1,7 +1,7 @@
 import { clsx } from 'clsx'
 import type { FC } from 'react'
 import { memo, useDeferredValue, useEffect } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useMusicStore, usePlayProgress } from '~/atoms/music'
 import { Seo } from '~/components/app/Seo'

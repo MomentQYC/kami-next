@@ -8,6 +8,7 @@ import { apiClient } from '~/utils/client'
 import { isLikedBefore, setLikeId } from '~/utils/cookie'
 
 import { createCollection } from './utils/base'
+import { isEqualObject } from '~/utils/_'
 
 interface NoteCollection {
   relationMap: Map<
@@ -184,8 +185,16 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
 
       add(data: NoteModel | NoteModel[]) {
         const notes = Array.isArray(data) ? data : [data]
+        const currentData = getState().data
+        const toUpdate = notes.filter((n) => {
+          const exist = currentData.get(n.id)
+          return !exist || !isEqualObject(exist, n)
+        })
+
+        if (toUpdate.length === 0) return
+
         setState((state) => {
-          notes.forEach((note) => {
+          toUpdate.forEach((note) => {
             state.data.set(note.id, note)
             state.nidToIdMap.set(note.nid, note.id)
             if (
@@ -205,22 +214,33 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
 
       addOrPatch(data: NoteModel | NoteModel[]) {
         const notes = Array.isArray(data) ? data : [data]
+        const currentData = getState().data
+        const toUpdate: { id: string; next: NoteModel }[] = []
+
+        notes.forEach((note) => {
+          const exist = currentData.get(note.id)
+          const nextNote = exist ? ({ ...exist, ...note } as NoteModel) : note
+          if (!exist || !isEqualObject(exist, nextNote)) {
+            toUpdate.push({ id: note.id, next: nextNote })
+          }
+        })
+
+        if (toUpdate.length === 0) return
+
         setState((state) => {
-          notes.forEach((note) => {
-            const exist = state.data.get(note.id)
-            const nextNote = exist ? ({ ...exist, ...note } as NoteModel) : note
-            state.data.set(note.id, nextNote)
-            state.nidToIdMap.set(nextNote.nid, nextNote.id)
+          toUpdate.forEach(({ id, next }) => {
+            state.data.set(id, next)
+            state.nidToIdMap.set(next.nid, next.id)
 
             if (
-              'prev' in note &&
-              'next' in note &&
-              note.prev &&
-              note.next
+              'prev' in next &&
+              'next' in next &&
+              next.prev &&
+              next.next
             ) {
-              state.relationMap.set(note.id, [
-                note.prev as Partial<NoteModel>,
-                note.next as Partial<NoteModel>,
+              state.relationMap.set(id, [
+                next.prev as Partial<NoteModel>,
+                next.next as Partial<NoteModel>,
               ])
             }
           })

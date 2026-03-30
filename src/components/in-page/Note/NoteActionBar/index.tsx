@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import type { FC } from 'react'
 import { useRef } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useNoteCollection } from '~/atoms/collections/note'
 import { RelativeTime } from '~/components/common/RelativeTime'

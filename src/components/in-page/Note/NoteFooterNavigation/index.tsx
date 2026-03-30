@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import { memo } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { noteCollection, useNoteCollection } from '~/atoms/collections/note'
 import { Divider } from '~/components/ui/Divider'

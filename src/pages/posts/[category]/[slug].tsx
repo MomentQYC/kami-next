@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import type { FC } from 'react'
 import React, { lazy, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { message } from 'react-message-popup'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import type { PostModel } from '@mx-space/api-client'
 

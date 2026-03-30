@@ -17,7 +17,7 @@ import type { NoteModel } from '@mx-space/api-client'
 import { RequestError } from '@mx-space/api-client'
 
 import { useNoteCollection } from '~/atoms/collections/note'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 import type { ModelWithDeleted } from '~/atoms/collections/utils/base'
 import { useIsLogged, useUserStore } from '~/atoms/user'
 import { Suspense } from '~/components/app/Suspense'

@@ -5,7 +5,7 @@ import { clsx } from 'clsx'
 import Link from 'next/link'
 import type { FC } from 'react'
 import { memo, useEffect, useMemo, useState } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useAutoAnimate } from '@formkit/auto-animate/react'
 import type { NoteModel } from '@mx-space/api-client'

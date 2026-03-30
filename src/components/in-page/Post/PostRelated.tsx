@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { memo } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { usePostCollection } from '~/atoms/collections/post'
 import { Divider } from '~/components/ui/Divider'

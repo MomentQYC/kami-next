@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { motion, useAnimationControls } from 'framer-motion'
 import type { ReactNode } from 'react'
 import { forwardRef, lazy, useCallback, useEffect } from 'react'
-import { useShallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useAppStore } from '~/atoms/app'
 import { useNoteCollection } from '~/atoms/collections/note'
