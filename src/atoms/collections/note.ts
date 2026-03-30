@@ -7,7 +7,7 @@ import type { FetchOption } from '~/atoms/types'
 import { apiClient } from '~/utils/client'
 import { isLikedBefore, setLikeId } from '~/utils/cookie'
 
-import { createCollection } from './utils/base'
+import { createCollection, type ModelWithDeleted } from './utils/base'
 import { isEqualObject } from '~/utils/_'
 
 interface NoteCollection {
@@ -149,20 +149,28 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
           id as number,
           password as string,
         )
-        state.add(data.data)
         setState((state) => {
-          state.nidToIdMap.set(data.data.nid, data.data.id)
-          state.relationMap.set(data.data.id, [data.prev, data.next])
+          const note = data.data
+          const exist = state.data.get(note.id)
+          if (!exist || !isEqualObject(exist, note)) {
+            state.data.set(note.id, note as ModelWithDeleted<NoteModel>)
+          }
+          state.nidToIdMap.set(note.nid, note.id)
+          state.relationMap.set(note.id, [data.prev, data.next])
         })
 
         return data.data
       },
       async fetchLatest() {
         const data = await apiClient.note.getLatest()
-        getState().add(data.data)
         setState((state) => {
-          state.nidToIdMap.set(data.data.nid, data.data.id)
-          state.relationMap.set(data.data.id, [data.prev, data.next])
+          const note = data.data
+          const exist = state.data.get(note.id)
+          if (!exist || !isEqualObject(exist, note)) {
+            state.data.set(note.id, note as ModelWithDeleted<NoteModel>)
+          }
+          state.nidToIdMap.set(note.nid, note.id)
+          state.relationMap.set(note.id, [data.prev, data.next])
         })
 
         return data.data
