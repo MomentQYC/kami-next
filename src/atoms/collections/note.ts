@@ -230,4 +230,8 @@ export const useNoteCollection = createCollection<NoteModel, NoteCollection>(
   },
 )
 
-export const noteCollection = useNoteCollection.getState()
+export const noteCollection = new Proxy({} as NoteCollection, {
+  get(target, prop) {
+    return useNoteCollection.getState()[prop as keyof NoteCollection]
+  },
+})

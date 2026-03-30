@@ -131,8 +131,13 @@ const NextPageView: NextPage<PageModel> = (props) => {
   const { id } = props
   const pageId = usePageCollection((state) => state.data.get(id)?.id)
 
+  useEffect(() => {
+    if (!pageId) {
+      usePageCollection.getState().add(props)
+    }
+  }, [id, pageId, props])
+
   if (!pageId) {
-    usePageCollection.getState().add(props)
     return <Loading />
   }
 

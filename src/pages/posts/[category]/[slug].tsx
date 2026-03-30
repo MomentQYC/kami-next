@@ -363,8 +363,13 @@ const NextPostView: NextPage<PostModel> = (props) => {
   const { id } = props
   const postId = usePostCollection((state) => state.data.get(id)?.id)
 
+  useEffect(() => {
+    if (!postId) {
+      usePostCollection.getState().add(props)
+    }
+  }, [id, postId, props])
+
   if (!postId) {
-    usePostCollection.getState().add(props)
     return <Loading />
   }
 

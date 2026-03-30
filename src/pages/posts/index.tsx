@@ -84,7 +84,7 @@ const PostListPage: NextPage<PaginateResult<PostModel>> = () => {
 
       {pagination && (
         <section className="mt-4 flex justify-between">
-          {pagination.hasPrevPage ? (
+          {pagination.hasPrevPage && pagination.currentPage > 1 ? (
             <PaginationButton
               onClick={() => {
                 router.push(`/posts?page=${pagination.currentPage - 1}`)
@@ -95,7 +95,7 @@ const PostListPage: NextPage<PaginateResult<PostModel>> = () => {
           ) : (
             <div />
           )}
-          {pagination.hasNextPage && (
+          {pagination.hasNextPage && pagination.currentPage < pagination.totalPage && (
             <PaginationButton
               onClick={() => {
                 router.push(`/posts?page=${pagination.currentPage + 1}`)

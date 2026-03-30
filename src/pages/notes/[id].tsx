@@ -150,9 +150,10 @@ const NoteView: React.FC<{ id: string }> = memo((props) => {
   useEffect(() => {
     if (!note?.id || isFetching.current) return
     // FIXME: SSR 之后的 hydrate 没有同步数据
-    if (!noteCollection.relationMap.has(note.id)) {
+    const state = useNoteCollection.getState()
+    if (!state.relationMap.has(note.id)) {
       isFetching.current = true
-      noteCollection.fetchById(note.nid, undefined, { force: true }).finally(() => {
+      state.fetchById(note.nid, undefined, { force: true }).finally(() => {
         isFetching.current = false
       })
     }
