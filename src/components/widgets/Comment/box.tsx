@@ -12,7 +12,8 @@ import React, {
 import { message } from 'react-message-popup'
 import isEmail from 'validator/lib/isEmail'
 import isUrl from 'validator/lib/isURL'
-import { create } from 'zustand'
+import { createStore, useStore } from 'zustand'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useIsLogged, useUserStore } from '~/atoms/user'
 import { ImpressionView } from '~/components/common/ImpressionView'
@@ -53,7 +54,7 @@ const initialState = {
 }
 
 const createCommentState = () =>
-  create<
+  createStore<
     typeof initialState & {
       setConfig(config: Partial<typeof initialConfig>): void
     }
@@ -64,10 +65,7 @@ const createCommentState = () =>
     },
   }))
 
-const commentStoreMap = {} as Record<
-  string,
-  ReturnType<typeof createCommentState>
->
+type CommentStore = ReturnType<typeof createCommentState>
 
 const FormInputCopyMap = {
   author: '昵称 *',
@@ -81,14 +79,16 @@ const FormInputIconMap = {
 }
 const FormInput: FC<{
   fieldKey: 'author' | 'mail' | 'url'
-  instanceId: string
+  store: CommentStore
 }> = (props) => {
-  const { fieldKey, instanceId: key } = props
-  const useCommentStore = commentStoreMap[key]
-  const value = useCommentStore((state) => state[fieldKey])
-  const onChange = useCallback((e) => {
-    useCommentStore.setState({ [fieldKey]: e.target.value })
-  }, [])
+  const { fieldKey, store } = props
+  const value = useStore(store, (state) => state[fieldKey])
+  const onChange = useCallback(
+    (e) => {
+      store.setState({ [fieldKey]: e.target.value })
+    },
+    [fieldKey, store],
+  )
   return (
     <Input
       placeholder={FormInputCopyMap[fieldKey]}
@@ -102,7 +102,7 @@ const FormInput: FC<{
 }
 
 export const CommentBox: FC<{
-  onSubmit: ({ text, author, mail, url, isWhispers }) => any
+  onSubmit: (model: any) => Promise<any>
   onCancel?: () => any
   autoFocus?: boolean
 
@@ -110,34 +110,22 @@ export const CommentBox: FC<{
   commentId?: string
 }> = memo(({ onSubmit, onCancel, autoFocus = false, refId, commentId }) => {
   const taRef = useRef<HTMLTextAreaElement>(null)
-  const currentId = useId()
-  let useCommentStore = commentStoreMap[currentId]
+  const commentStore = useMemo(() => createCommentState(), [])
 
-  useSyncEffectOnce(() => {
-    if (!useCommentStore) {
-      commentStoreMap[currentId] = createCommentState()
-      useCommentStore = commentStoreMap[currentId]
-    }
-
+  useEffect(() => {
     if (isDev && isClientSide()) {
-      useCommentStore.setState({
+      commentStore.setState({
         author: '测试昵称',
         mail: 'test@innei.ren',
         url: 'https://test.innei.ren',
       })
     }
-  })
-
-  useEffect(() => {
-    return () => {
-      delete commentStoreMap[currentId]
-    }
-  }, [])
+  }, [commentStore])
 
   useEffect(() => {
     const $ref = taRef.current
-    if ($ref && isDev) {
-      const setText = (text: string) => useCommentStore.setState({ text })
+    if ($ref) {
+      const setText = (text: string) => commentStore.setState({ text })
       if (isDev) {
         const testText =
           '幻なんかじゃない 人生は夢じゃない 僕達ははっきりと生きてるんだ'
@@ -161,7 +149,7 @@ export const CommentBox: FC<{
     if (taRef.current) {
       taRef.current.value = ''
 
-      useCommentStore.setState({
+      commentStore.setState({
         text: '',
       })
     }
@@ -181,7 +169,7 @@ export const CommentBox: FC<{
       start,
     )} ${emoji} ${$ta.value.substring(end, $ta.value.length)}`
 
-    useCommentStore.setState({ text: $ta.value })
+    commentStore.setState({ text: $ta.value })
     requestAnimationFrame(() => {
       const shouldMoveToPos = start + emoji.length + 2
       $ta.selectionStart = shouldMoveToPos
@@ -189,7 +177,7 @@ export const CommentBox: FC<{
 
       $ta.focus()
     })
-  }, [])
+  }, [commentStore])
 
   const handleCancel = () => {
     onCancel?.()
@@ -205,7 +193,7 @@ export const CommentBox: FC<{
       useUserStore.getState().master || {}
     const logged = useUserStore.getState().isLogged
     const { author, mail, url, isWhispers, syncToRecently } =
-      useCommentStore.getState()
+      commentStore.getState()
     if (!logged) {
       if (author === ownerName || author === ownerUserName) {
         return message.error('昵称与我主人重名了，但是你好像并不是我的主人唉')
@@ -264,14 +252,14 @@ export const CommentBox: FC<{
           url: string
         }
         for (const key in model) {
-          if (model[key] === 'undefined') {
-            model[key] = ''
+          if ((model as any)[key] === 'undefined') {
+            ;(model as any)[key] = ''
           }
         }
-        useCommentStore.setState(model)
+        commentStore.setState(model)
       } catch {}
     }
-  }, [])
+  }, [commentStore])
 
   const setWrapper = useCallback((fn: (value: string) => void) => {
     return (e: any) => {
@@ -294,26 +282,27 @@ export const CommentBox: FC<{
 
   const logged = useIsLogged()
 
-  const setter = useRef(
-    // @ts-ignore
-    ['author', 'mail', 'url', 'text'].reduce((acc, key) => {
-      acc[key] = setWrapper((e) => {
-        useCommentStore.setState({ [key]: e })
-      })
-      return acc
-    }, {}),
-  ).current
+  const setter = useMemo(
+    () =>
+      ['author', 'mail', 'url', 'text'].reduce((acc, key) => {
+        acc[key] = setWrapper((e) => {
+          commentStore.setState({ [key]: e })
+        })
+        return acc
+      }, {} as any),
+    [commentStore, setWrapper],
+  )
 
-  const isWhispers = useCommentStore((state) => state.isWhispers)
-  const text = useCommentStore((state) => state.text)
+  const isWhispers = useStore(commentStore, (state) => state.isWhispers)
+  const text = useStore(commentStore, (state) => state.text)
 
   return (
     <div className="my-4">
       {!logged && (
         <div className={styles['comment-box-head']}>
-          <FormInput fieldKey="author" instanceId={currentId} />
-          <FormInput fieldKey="mail" instanceId={currentId} />
-          <FormInput fieldKey="url" instanceId={currentId} />
+          <FormInput fieldKey="author" store={commentStore} />
+          <FormInput fieldKey="mail" store={commentStore} />
+          <FormInput fieldKey="url" store={commentStore} />
         </div>
       )}
       <Input
@@ -350,7 +339,7 @@ export const CommentBox: FC<{
           <CommentBoxOption
             refId={refId}
             commentId={commentId}
-            instanceId={currentId}
+            store={commentStore}
           />
 
           {onCancel && (
@@ -377,14 +366,15 @@ export const CommentBox: FC<{
 const CommentBoxOption: FC<{
   commentId?: string
   refId: string
-  instanceId: string
+  store: CommentStore
 }> = (props) => {
   const isLogged = useIsLogged()
-  const useCommentStore = commentStoreMap[props.instanceId]
-  const { syncToRecently, isWhispers } = useCommentStore((state) =>
-    pick(state, ['syncToRecently', 'isWhispers']),
+  const { store } = props
+  const { syncToRecently, isWhispers } = useStore(
+    store,
+    useShallow((state) => pick(state, ['syncToRecently', 'isWhispers'])),
   )
-  const setConfig = useCommentStore.getState().setConfig
+  const setConfig = store.getState().setConfig
   const isReply = !!props.commentId
 
   return (
