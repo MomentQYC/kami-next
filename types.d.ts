@@ -51,6 +51,8 @@ declare module '@mx-space/api-client' {
   }
   interface TextBaseModel extends BaseCommentIndexModel {
     meta?: PostMeta
+    content?: string
+    contentFormat?: string
   }
 
   interface AggregateTopNote {

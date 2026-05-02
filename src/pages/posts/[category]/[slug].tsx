@@ -54,6 +54,7 @@ import { noop } from '~/utils/utils'
 
 import { Copyright } from '../../../components/widgets/Copyright'
 import { AckRead } from '~/components/common/AckRead'
+import { LexicalRenderer } from '~/components/common/LexicalRenderer'
 
 const CommentLazy = lazy(() =>
   import('~/components/widgets/Comment').then((mo) => ({
@@ -279,6 +280,8 @@ export const PostView: PageOnlyProps = (props) => {
         created: item.created,
         modified: item.modified,
         text: item.text,
+        content: item.content,
+        contentFormat: item.contentFormat,
         copyright: item.copyright,
         allowComment: item.allowComment,
       }
@@ -330,7 +333,11 @@ export const PostView: PageOnlyProps = (props) => {
         <ImageSizeMetaContext.Provider value={imagesMap}>
           <article>
             <h1 className="sr-only">{post.title}</h1>
-            <KamiMarkdown codeBlockFully value={post.text} toc />
+            {post.contentFormat === 'lexical' ? (
+              <LexicalRenderer content={post.content} />
+            ) : (
+              <KamiMarkdown codeBlockFully value={post.text} toc />
+            )}
           </article>
         </ImageSizeMetaContext.Provider>
 
