@@ -55,7 +55,10 @@ let configs = {
         { source: '/sitemap.xml', destination: '/api/sitemap' },
       ],
       fallback: [
-        { source: '/:page*/:slug*', destination: '/posts/:page*/:slug*' },
+        {
+          source: '/:path((?!_next/|api/|assets/|favicon.ico|favicon.svg).*)',
+          destination: '/posts/:path*',
+        },
       ],
     }
   },
